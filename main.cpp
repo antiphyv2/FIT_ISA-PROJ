@@ -5,8 +5,10 @@
 
 int main(int argc, char** argv){
     
+    DEBUG_PRINT("Starting isa project..." << std::endl);
+
     std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
-    
+
     try {
         sniffer->getParser()->parseArgs(argc, argv);
     } catch (const argParserException& e) {
@@ -17,14 +19,13 @@ int main(int argc, char** argv){
         }
     }
 
-    
+    DEBUG_PRINT("Interface: " << sniffer->getParser()->getInterface() << std::endl);
+    DEBUG_PRINT("Sort by packets: " << sniffer->getParser()->getSortPackets() << std::endl);
+    DEBUG_PRINT("Sort by bytes: " << sniffer->getParser()->getSortBytes() << std::endl);
+    DEBUG_PRINT("List interfaces: " << sniffer->getParser()->getPrintInterfaces() << std::endl);
 
-    DEBUG_PRINT("Interface: " << cliArgs->interface << std::endl);
-    DEBUG_PRINT("Sort by packets: " << cliArgs->sortPackets << std::endl);
-    DEBUG_PRINT("Sort by bytes: " << cliArgs->sortBytes << std::endl);
-    DEBUG_PRINT("List interfaces: " << cliArgs->printInterfaces << std::endl);
+    //std::cout << sniffer->getParser()->getInterface() << std::endl;
 
-    std::cout << sniffer->getParser()->getInterface() << std::endl;
     return EXIT_SUCCESS;
 }
 
