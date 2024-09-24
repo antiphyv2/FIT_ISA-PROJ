@@ -60,10 +60,9 @@ public:
     int getRetCode() const;
 };
 
-enum parserRetCodes {
+enum parserExcCodes {
     ERROR,
-    PRINT_HELP,
-    DEFAULT
+    DEFAULT,
 };
 
 enum snifferRetCodes {

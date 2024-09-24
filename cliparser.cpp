@@ -2,6 +2,10 @@
 #include "main.hpp"
 #include "exceptions.hpp"
 
+void cliParser::printHelp(){
+    std::cout << "Usage: ./isa-top -i interface -s -p|b" << std::endl;
+}
+
 void cliParser::parseArgs(int argc, char** argv){
     DEBUG_PRINT("Arg number: " << argc << std::endl);
 
@@ -12,7 +16,7 @@ void cliParser::parseArgs(int argc, char** argv){
                 this->interface = optarg;
                 break;
             case 'h':
-                throw argParserException(PRINT_HELP, "Usage: ./isa-top -i interface -s -p|b");
+                this->helpPrintFlag = true;
                 break;
             case 's':
                 if(strlen(optarg) != 1 || (optarg[0] != 'b' && optarg[0] != 'p')){
@@ -33,7 +37,7 @@ void cliParser::parseArgs(int argc, char** argv){
                 this->printInterfaces = true;
                 break;
             default:
-                throw argParserException(DEFAULT,"See -h for usage.");
+                throw argParserException(DEFAULT, "See -h for usage.");
         }
     }
 }
@@ -50,8 +54,12 @@ bool cliParser::getSortBytes(){
     return this->sortBytes;
 }
 
-bool cliParser::getPrintInterfaces(){
+bool cliParser::getInterfacesFlag(){
     return this->printInterfaces;
+}
+
+bool cliParser::getHelpFlag(){
+    return this->helpPrintFlag;
 }
 
 void cliParser::setInterface(std::string interface){
@@ -66,6 +74,10 @@ void cliParser::setSortBytes(bool sortBytes){
     this->sortBytes = sortBytes;
 }
 
-void cliParser::setPrintInterfaces(bool printInterfaces){
+void cliParser::setInterfacesFlag(bool printInterfaces){
     this->printInterfaces = printInterfaces;
+}
+
+void cliParser::setHelpFlag(bool printHelp){
+    this->helpPrintFlag = printHelp;
 }

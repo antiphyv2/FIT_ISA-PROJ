@@ -6,13 +6,12 @@
 class packetSniffer {
 
 private:
-    cliParser parser;
+    parsedArgs cliArgs;
 public:
     
     packetSniffer();
     ~packetSniffer();
-    cliParser* getParser();
-    void sniffThePackets();
-    void listInterfaces();
+    parsedArgs getCommandLineArgs();
+    void setCommandLineArgs(parsedArgs args);
 };
 #endif

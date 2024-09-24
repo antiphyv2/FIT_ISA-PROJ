@@ -9,6 +9,7 @@ private:
     bool sortPackets = false; // sort output by number of packets
     bool sortBytes = false; // sort output by number of bytes
     bool printInterfaces = false; // interface list will be printed if true
+    bool helpPrintFlag = false; // help message will be printed if true
 
 public:
     /**
@@ -45,7 +46,14 @@ public:
      * 
      * @return bool print interfaces flag
      */
-    bool getPrintInterfaces();
+    bool getInterfacesFlag();
+
+    /**
+     * @brief Get print help flag
+     * 
+     * @return bool print help flag
+     */
+    bool getHelpFlag();
 
     /**
      * @brief Set interface name
@@ -73,7 +81,25 @@ public:
      * 
      * @param printInterfaces print interfaces flag
      */
-    void setPrintInterfaces(bool printInterfaces);
+    void setInterfacesFlag(bool printInterfaces);
+
+    /**
+     * @brief Set print help flag
+     * 
+     * @param printHelp print help flag
+     */
+    void setHelpFlag(bool printHelp);
+
+    /**
+     * @brief Prints help message
+     */
+    void printHelp();
+};
+
+enum parserRetCodes {
+    OK,
+    PRINT_HELP,
+    LIST_INTERFACES,
 };
 
 #endif

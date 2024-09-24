@@ -11,7 +11,11 @@ cliParser* packetSniffer::getParser(){
 
 void packetSniffer::sniffThePackets(){
 
-    DEBUG_PRINT("Starting the packet sniffer" << std::endl);
+    DEBUG_PRINT("Starting the packet sniffer..." << std::endl);
 
     throw packetSnifferException(SNIFFER_OK, "Sniffer ended correctly.");
+}
+
+void packetSniffer::listInterfaces(){
+
 }
