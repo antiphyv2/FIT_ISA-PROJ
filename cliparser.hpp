@@ -8,8 +8,6 @@ private:
     std::string interface; // interface name
     bool sortPackets = false; // sort output by number of packets
     bool sortBytes = false; // sort output by number of bytes
-    bool printInterfaces = false; // interface list will be printed if true
-    bool helpPrintFlag = false; // help message will be printed if true
 
 public:
     /**
@@ -42,20 +40,6 @@ public:
     bool getSortBytes();
 
     /**
-     * @brief Get print interfaces flag
-     * 
-     * @return bool print interfaces flag
-     */
-    bool getInterfacesFlag();
-
-    /**
-     * @brief Get print help flag
-     * 
-     * @return bool print help flag
-     */
-    bool getHelpFlag();
-
-    /**
      * @brief Set interface name
      * 
      * @param interface interface name
@@ -75,20 +59,6 @@ public:
      * @param sortBytes sort by bytes flag
      */
     void setSortBytes(bool sortBytes);
-
-    /**
-     * @brief Set print interfaces flag
-     * 
-     * @param printInterfaces print interfaces flag
-     */
-    void setInterfacesFlag(bool printInterfaces);
-
-    /**
-     * @brief Set print help flag
-     * 
-     * @param printHelp print help flag
-     */
-    void setHelpFlag(bool printHelp);
 
     /**
      * @brief Prints help message

@@ -13,6 +13,6 @@ public:
     ~packetSniffer();
     cliParser* getParser();
     void sniffThePackets();
-    void listInterfaces();
+    static void listInterfaces();
 };
 #endif

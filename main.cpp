@@ -20,24 +20,16 @@ int main(int argc, char** argv){
         DEBUG_PRINT("Sort by bytes: " << sniffer->getParser()->getSortBytes() << std::endl);
         DEBUG_PRINT("List interfaces: " << sniffer->getParser()->getPrintInterfaces() << std::endl);
 
-        const auto& parser = sniffer->getParser();
-        if(parser->getInterfacesFlag()){
-            sniffer->listInterfaces();
-            return(EXIT_SUCCESS);
-        } else if (parser->getHelpFlag()){
-            parser->printHelp();
-            return(EXIT_SUCCESS);
-        }
-
         sniffer->sniffThePackets();
     } catch (const argParserException& e) {
-        std::cerr << e.what() << std::endl;
-        exit(EXIT_FAILURE);
-
+        if(e.getRetCode() != PRINT){
+            std::cerr << e.what() << std::endl;
+            return(EXIT_FAILURE);
+        }
     } catch (const packetSnifferException& e){
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
-            exit(EXIT_FAILURE);
+            return(EXIT_FAILURE);
         }
     }
 

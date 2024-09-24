@@ -1,6 +1,7 @@
 #include "cliparser.hpp"
 #include "main.hpp"
 #include "exceptions.hpp"
+#include "packetSniffer.hpp"
 
 void cliParser::printHelp(){
     std::cout << "Usage: ./isa-top -i interface -s -p|b" << std::endl;
@@ -16,8 +17,8 @@ void cliParser::parseArgs(int argc, char** argv){
                 this->interface = optarg;
                 break;
             case 'h':
-                this->helpPrintFlag = true;
-                break;
+                this->printHelp();
+                throw argParserException(PRINT, "");
             case 's':
                 if(strlen(optarg) != 1 || (optarg[0] != 'b' && optarg[0] != 'p')){
                     throw argParserException(ERROR, "ERR: -s parameter can only have b|p argument, see -h for usage.");
@@ -34,10 +35,10 @@ void cliParser::parseArgs(int argc, char** argv){
                 }
                 break;
             case 'l':
-                this->printInterfaces = true;
-                break;
+                packetSniffer::listInterfaces();
+                throw argParserException(PRINT, "");
             default:
-                throw argParserException(DEFAULT, "See -h for usage.");
+                throw argParserException(DEFAULT, "Try ./isa-top -h for help.");
         }
     }
 }
@@ -54,14 +55,6 @@ bool cliParser::getSortBytes(){
     return this->sortBytes;
 }
 
-bool cliParser::getInterfacesFlag(){
-    return this->printInterfaces;
-}
-
-bool cliParser::getHelpFlag(){
-    return this->helpPrintFlag;
-}
-
 void cliParser::setInterface(std::string interface){
     this->interface = interface;
 }
@@ -72,12 +65,4 @@ void cliParser::setSortPackets(bool sortPackets){
 
 void cliParser::setSortBytes(bool sortBytes){
     this->sortBytes = sortBytes;
-}
-
-void cliParser::setInterfacesFlag(bool printInterfaces){
-    this->printInterfaces = printInterfaces;
-}
-
-void cliParser::setHelpFlag(bool printHelp){
-    this->helpPrintFlag = printHelp;
 }
