@@ -12,5 +12,6 @@ public:
     packetSniffer();
     ~packetSniffer();
     cliParser* getParser();
+    void sniffThePackets();
 };
 #endif
