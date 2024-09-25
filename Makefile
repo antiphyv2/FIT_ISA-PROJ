@@ -8,7 +8,7 @@ SRCS=$(wildcard *.cpp)
 OBJS=$(patsubst %.cpp,%.o,$(SRCS))
 
 $(PROJ) : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^
+	$(CC) $(CFLAGS) -o $@ $^ -lpcap
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

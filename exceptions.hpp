@@ -2,6 +2,7 @@
 #define EXCEPTIONS_HPP
 #include "main.hpp"
 
+
 class argParserException : public std::exception {
 private:
     int retCode;

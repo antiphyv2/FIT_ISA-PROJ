@@ -2,6 +2,7 @@
 #define PACKET_SNIFFER_HPP
 
 #include "cliparser.hpp"
+#include <pcap/pcap.h>
 
 class packetSniffer {
 
