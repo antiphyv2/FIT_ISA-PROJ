@@ -14,7 +14,7 @@ $(PROJ) : $(OBJS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 debug:
-	$(CC) $(CFLAGS_TESTING) -o $(PROJ) $(SRCS)
+	$(CC) $(CFLAGS_TESTING) -o $(PROJ) $(SRCS) -lpcap
 
 clean :
 	$(RM) *.o $(PROJ) 

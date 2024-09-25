@@ -18,7 +18,6 @@ int main(int argc, char** argv){
         DEBUG_PRINT("Interface: " << sniffer->getParser()->getInterface() << std::endl);
         DEBUG_PRINT("Sort by packets: " << sniffer->getParser()->getSortPackets() << std::endl);
         DEBUG_PRINT("Sort by bytes: " << sniffer->getParser()->getSortBytes() << std::endl);
-        DEBUG_PRINT("List interfaces: " << sniffer->getParser()->getPrintInterfaces() << std::endl);
 
         sniffer->sniffThePackets();
     } catch (const argParserException& e) {
@@ -32,6 +31,8 @@ int main(int argc, char** argv){
             return(EXIT_FAILURE);
         }
     }
+
+    DEBUG_PRINT("Ending isa project..." << std::endl);
 
     return EXIT_SUCCESS;
 }

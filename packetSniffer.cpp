@@ -17,6 +17,9 @@ void packetSniffer::sniffThePackets(){
 }
 
 void packetSniffer::listInterfaces(){
+
+    DEBUG_PRINT("Listing available interfaces..." << std::endl);
+
     pcap_if_t *networkDevices;
     char errbuf[PCAP_ERRBUF_SIZE];
 
@@ -40,6 +43,9 @@ void packetSniffer::listInterfaces(){
         int_count++;
         dev = dev->next;
     }
+
+    DEBUG_PRINT("All interfaces listed..." << std::endl);
+
     pcap_freealldevs(networkDevices);
 
 }
