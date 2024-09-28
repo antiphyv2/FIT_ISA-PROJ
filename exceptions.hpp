@@ -70,6 +70,7 @@ enum parserExcCodes {
 enum snifferRetCodes {
     INTERFACE_ERROR,
     PACKET_ERROR,
-    SNIFFER_OK
+    SNIFFER_OK,
+    SNIFFER_ERROR
 };
 #endif

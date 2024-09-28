@@ -8,12 +8,41 @@ class packetSniffer {
 
 private:
     cliParser parser;
+    pcap_t* sniffer;
+    char errbuf[PCAP_ERRBUF_SIZE];
 public:
     
     packetSniffer();
     ~packetSniffer();
+
+    /**
+     * @brief Get the Parser object
+     * 
+     * @return cliParser* Pointer to the parser object
+     */
     cliParser* getParser();
+
+
+    /**
+     * @brief Sniffs the packets
+     * 
+     */
     void sniffThePackets();
+
+    /**
+     * @brief Lists all available network interfaces
+     * 
+     */
     static void listInterfaces();
+
+    /**
+     * @brief Parses the packets 
+     * 
+     * @param user Pointer to the user data
+     * @param pkthdr Pointer to the packet time stamp and lengths
+     * @param packet Pointer to the first caplen bytes of packet data
+     */
+    static void packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet);
+
 };
 #endif
