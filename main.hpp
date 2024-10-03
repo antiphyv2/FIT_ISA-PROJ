@@ -14,6 +14,14 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netinet/ip.h>
+#include <netinet/udp.h>
+#include <netinet/tcp.h>
+#include <netinet/ether.h>
+#include <netinet/ip6.h>
+#include <netinet/ip_icmp.h>
+#include <netinet/icmp6.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -25,5 +33,8 @@
 #include <queue>
 #include <poll.h>
 #include <cctype>
+
+
+void gracefulExit(int sig);
 
 #endif

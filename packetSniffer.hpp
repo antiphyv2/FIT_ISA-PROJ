@@ -24,6 +24,13 @@ public:
 
 
     /**
+     * @brief Get the Sniffer object
+     * 
+     * @return pcap_t* Pointer to the sniffer object
+     */
+    pcap_t* getSniffer();
+
+    /**
      * @brief Sniffs the packets
      * 
      */

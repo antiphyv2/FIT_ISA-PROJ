@@ -12,6 +12,10 @@ cliParser* packetSniffer::getParser(){
     return &this->parser;
 }
 
+pcap_t* packetSniffer::getSniffer(){
+    return this->sniffer;
+}
+
 //All functions needed to create the sniffer are taken from my IPK2 projecct and are based on an example from
 //https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer
 
@@ -26,7 +30,7 @@ void packetSniffer::sniffThePackets(){
         throw packetSnifferException(SNIFFER_ERROR, errbuf);
     }
 
-    int retCode = pcap_loop(sniffer, -1, packetParser, NULL);
+    int retCode = pcap_loop(sniffer, -0, packetParser, NULL);
     if(retCode == -1){
         std::cerr << "ERROR: [PCAP_LOOP]";
         throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
@@ -39,6 +43,47 @@ void packetSniffer::sniffThePackets(){
 void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet){
 
     DEBUG_PRINT("Parsing packet..." << std::endl);
+
+    //Print frame length
+    printf("frame length: %u\n", pkthdr->len);
+
+    //Find out if type is IPV4, IPV6
+    uint16_t ethernet_type = ntohs(((struct ether_header*) packet)->ether_type);
+
+    //Now we can skip the datalink ethernet header and get to the ip header
+    packet += 14;
+
+    switch (ethernet_type){
+
+    case ETHERTYPE_IP: {
+        //Get the ip header to determine protocol
+        struct ip* ip_header = (struct ip*) packet;
+        if (ip_header->ip_p == IPPROTO_TCP) {
+            printf("packet type: ipv4 TCP\n");
+        } else if (ip_header->ip_p == IPPROTO_UDP) {
+            printf("packet type: ipv4 UDP\n");
+        } else if(ip_header->ip_p == IPPROTO_ICMP) {
+            printf("packet type: ipv4 ICMP\n");
+        }
+        break;
+    }
+
+    case ETHERTYPE_IPV6: {
+        struct ip6_hdr* ipv6_header = (struct ip6_hdr*) packet;
+        uint8_t next_header = ipv6_header->ip6_ctlun.ip6_un1.ip6_un1_nxt;
+        if(next_header == IPPROTO_TCP){
+            printf("packet type: ipv6 TCP\n");
+        } else if(next_header == IPPROTO_UDP){
+            printf("packet type: ipv6 UDP\n");
+        } else if(next_header == IPPROTO_ICMPV6){
+            printf("packet type: ipv6 ICMPv6\n");
+        }
+        break;
+    }
+
+    default:
+        break;
+    }
 
     DEBUG_PRINT("Packet parsed..." << std::endl);
 
