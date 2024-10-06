@@ -30,6 +30,12 @@ public:
      */
     pcap_t* getSniffer();
 
+        /**
+     * @brief Runs the sniffer
+     * 
+     */
+    void runSniffer(int argc, char** argv, std::promise<int> promise);
+
     /**
      * @brief Sniffs the packets
      * 
@@ -50,6 +56,9 @@ public:
      * @param packet Pointer to the first caplen bytes of packet data
      */
     static void packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet);
+
+
+
 
 };
 #endif

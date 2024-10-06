@@ -9,6 +9,10 @@
 
 #include <iostream>
 #include <memory> 
+#include <thread>
+#include <future>
+#include <stdexcept>
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netdb.h>
@@ -35,6 +39,6 @@
 #include <cctype>
 
 
-void gracefulExit(int sig);
+void gracefulExit(int signal);
 
 #endif

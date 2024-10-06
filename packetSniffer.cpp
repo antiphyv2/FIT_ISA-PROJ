@@ -16,6 +16,27 @@ pcap_t* packetSniffer::getSniffer(){
     return this->sniffer;
 }
 
+void packetSniffer::runSniffer(int argc, char** argv, std::promise<int> promise){
+
+    int exit_value = EXIT_SUCCESS;
+
+    try {
+        this->getParser()->parseArgs(argc, argv);
+        this->sniffThePackets();
+    } catch (const argParserException& e) {
+        if(e.getRetCode() != PRINT){
+            std::cerr << e.what() << std::endl;
+            exit_value = EXIT_FAILURE;
+        }
+    } catch (const packetSnifferException& e){
+        std::cerr << e.what() << std::endl;
+        if(e.getRetCode() != SNIFFER_OK){
+            exit_value = EXIT_FAILURE;
+        }
+    }
+    promise.set_value(exit_value);
+}
+
 //All functions needed to create the sniffer are taken from my IPK2 projecct and are based on an example from
 //https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer
 
@@ -30,7 +51,7 @@ void packetSniffer::sniffThePackets(){
         throw packetSnifferException(SNIFFER_ERROR, errbuf);
     }
 
-    int retCode = pcap_loop(sniffer, -0, packetParser, NULL);
+    int retCode = pcap_loop(sniffer, 1, packetParser, NULL);
     if(retCode == -1){
         std::cerr << "ERROR: [PCAP_LOOP]";
         throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));

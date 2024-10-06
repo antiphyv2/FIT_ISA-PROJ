@@ -8,13 +8,13 @@ SRCS=$(wildcard *.cpp)
 OBJS=$(patsubst %.cpp,%.o,$(SRCS))
 
 $(PROJ) : $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ -lpcap
+	$(CC) $(CFLAGS) -o $@ $^ -lpcap -pthread
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 debug:
-	$(CC) $(CFLAGS_TESTING) -o $(PROJ) $(SRCS) -lpcap
+	$(CC) $(CFLAGS_TESTING) -o $(PROJ) $(SRCS) -lpcap -pthread
 
 clean :
 	$(RM) *.o $(PROJ) 
