@@ -7,13 +7,15 @@
 class packetDisplay {
 private:
     bool setup = false;
-    WINDOW* leftwindow;
+    int winRows;
+    int winCols;
 
 public:
     packetDisplay();
     ~packetDisplay();
     void print();
     void windowRefresh();
+    void printDefaultWindow();
     void printColumnBorder(int columnCord, int rows);
     void printHeadline();
 };

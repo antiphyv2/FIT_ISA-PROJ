@@ -11,7 +11,6 @@ std::atomic<bool> snifferFlag(true);
 
 void gracefulExit(int signal){
     snifferFlag.store(false);
-
 }
 
 int main(int argc, char** argv){

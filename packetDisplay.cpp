@@ -25,26 +25,26 @@ void packetDisplay::printHeadline(){
     mvaddstr(1, 138, "Tx");
 }
 
-void packetDisplay::print(){
-    int rows, cols;
-    getmaxyx(stdscr, rows, cols);
-    for(int i = 0; i < cols; i++){
+void packetDisplay::printDefaultWindow(){
+    getmaxyx(stdscr, this->winRows, this->winCols);
+    for(int i = 0; i < winCols; i++){
         mvaddstr(0, i, "-");
         mvaddstr(2, i, "-");
-        mvaddstr(rows - 1, i, "-");
-        if(i == 0 || i == 45 || i == 91 || i == 109 || i == 129 || i == 149 || i == (cols - 1)){
-            printColumnBorder(i, rows);
+        mvaddstr(winRows - 1, i, "-");
+        if(i == 0 || i == 45 || i == 91 || i == 109 || i == 129 || i == 149 || i == (winCols - 1)){
+            printColumnBorder(i, winRows);
         }
     }
     printHeadline();
-    // wprintw(leftwindow, "hello world");
-    // wrefresh(leftwindow);
     refresh();
+}
+void packetDisplay::print(){
+
 }
 
 void packetDisplay::windowRefresh(){
     clear();
-    print();
+    printDefaultWindow();
     //refresh();
     napms(1000);
 }
