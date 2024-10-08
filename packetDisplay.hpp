@@ -9,6 +9,12 @@ private:
     bool setup = false;
     int winRows;
     int winCols;
+    WINDOW* srcIpPort;
+    WINDOW* dstIpPort;
+    WINDOW* proto;
+    WINDOW* rx;
+    WINDOW* tx;
+
 
 public:
     packetDisplay();
@@ -16,8 +22,8 @@ public:
     void print();
     void windowRefresh();
     void printDefaultWindow();
-    void printColumnBorder(int columnCord, int rows);
-    void printHeadline();
+    void printHeadLine();
+    void printHeadLineMarker(WINDOW* win);
 };
 
 
