@@ -51,11 +51,21 @@ void packetSniffer::sniffThePackets(){
         throw packetSnifferException(SNIFFER_ERROR, errbuf);
     }
 
-    int retCode = pcap_loop(sniffer, 1, packetParser, NULL);
-    if(retCode == -1){
-        std::cerr << "ERROR: [PCAP_LOOP]";
-        throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
+    // int retCode = pcap_loop(sniffer, 0, packetParser, NULL);
+    // if(retCode == -1){
+    //     std::cerr << "ERROR: [PCAP_LOOP]";
+    //     throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
+    // }
+    while(snifferFlag.load()){
+        pcap_pkthdr header;
+        const u_char* packet = pcap_next(this->sniffer, &header);
+        if(packet == NULL){
+            std::cerr << "ERROR: [PCAP_NEXT]";
+            throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
+        }
+        packetParser(NULL, &header, packet);
     }
+
 
     pcap_close(sniffer);
     throw packetSnifferException(SNIFFER_OK, "Sniffer ended correctly.");

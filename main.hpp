@@ -12,6 +12,7 @@
 #include <thread>
 #include <future>
 #include <stdexcept>
+#include <atomic> 
 
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -38,6 +39,7 @@
 #include <poll.h>
 #include <cctype>
 
+extern std::atomic<bool> snifferFlag;
 
 void gracefulExit(int signal);
 
