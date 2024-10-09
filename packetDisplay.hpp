@@ -3,6 +3,7 @@
 
 #include <ncurses.h>
 #include <iostream>
+#include <string.h>
 class packetDisplay {
 private:
     bool setup = false;
@@ -23,6 +24,7 @@ public:
     void printDefaultWindow();
     void printHeadLine();
     void printHeadLineMarker(WINDOW* win);
+    void printTextCenter(WINDOW* win, int rowPos, const char* text);
 };
 
 

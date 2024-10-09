@@ -13,7 +13,7 @@ packetDisplay::packetDisplay(){
 
         this->srcIpPort = newwin(this->winRows, biggerWinWidth, 0, 0);
         this->dstIpPort = newwin(this->winRows, biggerWinWidth, 0, windowShift);
-        windowShift += biggerWinWidth -1;
+        windowShift += biggerWinWidth;
         this->proto = newwin(this->winRows, smallerWinWidth, 0, windowShift);
         windowShift += smallerWinWidth;
         this->rx = newwin(this->winRows, smallerWinWidth, 0, windowShift);
@@ -32,6 +32,13 @@ packetDisplay::~packetDisplay(){
     endwin();
 }
 
+void packetDisplay::printTextCenter(WINDOW* win, int rowPos, const char* text){
+    int rows, cols;
+    getmaxyx(win, rows, cols);
+    int middlePos = (cols - strlen(text))/2;
+    mvwaddstr(win, rowPos, middlePos, text);
+}
+
 void packetDisplay::printHeadLineMarker(WINDOW* win){
     int rows, cols;
     getmaxyx(win, rows, cols);
@@ -41,11 +48,13 @@ void packetDisplay::printHeadLineMarker(WINDOW* win){
 }
 
 void packetDisplay::printHeadLine(){
-    mvwaddstr(this->srcIpPort, 1, 1, "SRC IP:PORT");
-    mvwaddstr(this->dstIpPort, 1, 1, "DST IP:PORT");
-    mvwaddstr(this->proto, 1, 1, "PROTO");
-    mvwaddstr(this->rx, 1, 1, "Rx");
-    mvwaddstr(this->tx, 1, 1, "Tx");
+    printTextCenter(this->srcIpPort, 1, "Src IP:Port");
+    printTextCenter(this->dstIpPort, 1, "Dst IP:Port");
+    printTextCenter(this->proto, 1, "Proto");
+    printTextCenter(this->rx, 1, "Rx");
+    printTextCenter(this->rx, 3, "b/s p/s");
+    printTextCenter(this->tx, 1, "Tx");
+    printTextCenter(this->tx, 3, "b/s p/s");
 
     printHeadLineMarker(this->srcIpPort);
     printHeadLineMarker(this->dstIpPort);
