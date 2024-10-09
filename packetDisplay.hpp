@@ -3,7 +3,6 @@
 
 #include <ncurses.h>
 #include <iostream>
-
 class packetDisplay {
 private:
     bool setup = false;

@@ -5,11 +5,20 @@ packetDisplay::packetDisplay(){
         initscr();
         curs_set(0);
         getmaxyx(stdscr, this->winRows, this->winCols);
-        this->srcIpPort = newwin(this->winRows, 45, 0, 0);
-        this->dstIpPort = newwin(this->winRows, 45, 0, 45);
-        this->proto = newwin(this->winRows, 19, 0, 90);
-        this->rx = newwin(this->winRows, 20, 0, 109);
-        this->tx = newwin(this->winRows, 20, 0, 129);
+
+        int biggerWinWidth = int (this->winCols/4);
+        int smallerWinWidth = int (this->winCols/6);
+
+        int windowShift = biggerWinWidth;
+
+        this->srcIpPort = newwin(this->winRows, biggerWinWidth, 0, 0);
+        this->dstIpPort = newwin(this->winRows, biggerWinWidth, 0, windowShift);
+        windowShift += biggerWinWidth -1;
+        this->proto = newwin(this->winRows, smallerWinWidth, 0, windowShift);
+        windowShift += smallerWinWidth;
+        this->rx = newwin(this->winRows, smallerWinWidth, 0, windowShift);
+        windowShift += smallerWinWidth;
+        this->tx = newwin(this->winRows, smallerWinWidth, 0,  windowShift);
         setup = true;
     }
 }
@@ -32,11 +41,11 @@ void packetDisplay::printHeadLineMarker(WINDOW* win){
 }
 
 void packetDisplay::printHeadLine(){
-    mvwaddstr(this->srcIpPort, 1, 17, "SRC IP:PORT");
-    mvwaddstr(this->dstIpPort, 1, 17, "DST IP:PORT");
-    mvwaddstr(this->proto, 1, 7, "PROTO");
-    mvwaddstr(this->rx, 1, 9, "Rx");
-    mvwaddstr(this->tx, 1, 9, "Tx");
+    mvwaddstr(this->srcIpPort, 1, 1, "SRC IP:PORT");
+    mvwaddstr(this->dstIpPort, 1, 1, "DST IP:PORT");
+    mvwaddstr(this->proto, 1, 1, "PROTO");
+    mvwaddstr(this->rx, 1, 1, "Rx");
+    mvwaddstr(this->tx, 1, 1, "Tx");
 
     printHeadLineMarker(this->srcIpPort);
     printHeadLineMarker(this->dstIpPort);
