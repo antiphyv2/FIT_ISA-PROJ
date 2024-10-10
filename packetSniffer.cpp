@@ -3,7 +3,6 @@
 
 packetSniffer::packetSniffer(){
     this->sniffer = NULL;
-    this->errbuf[0] = '\0';
 }
 
 packetSniffer::~packetSniffer(){}
@@ -23,11 +22,14 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
-        delete display;
+        if(display != nullptr){
+            delete display;
+        }
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
         }
+        
     }
     promise.set_value(exit_value);
 }
@@ -39,10 +41,9 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
 
     DEBUG_PRINT("Starting the packet sniffer..." << std::endl);
 
-    
+    char errbuf[PCAP_ERRBUF_SIZE];
     sniffer = pcap_open_live(this->getParser()->getInterface().c_str(), BUFSIZ, 1, 1000, errbuf);
     if(!sniffer){
-        snifferFlag.store(false);
         //std::cerr << "ERROR: [PCAP_OPEN_LIVE] Interface named ";
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
     }
@@ -52,16 +53,19 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
     //     std::cerr << "ERROR: [PCAP_LOOP]";
     //     throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
     // }
-    while(snifferFlag.load()){
-        pcap_pkthdr header;
-        const u_char* packet = pcap_next(this->sniffer, &header);
-        if(packet == NULL){
-            std::cerr << "ERROR: [PCAP_NEXT]";
-            throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
+        // pcap_pkthdr header;
+        // const u_char* packet = pcap_next(this->sniffer, &header);
+        // if(packet == NULL){
+        //     std::cerr << "ERROR: [PCAP_NEXT]";
+        //     throw packetSnifferException(SNIFFER_ERROR, pcap_geterr(sniffer));
+        // }
+        // packetParser(NULL, &header, packet);
+    if (pcap_loop(sniffer, 0, packetParser, nullptr) != 0) {
+        if(snifferFlag.load() != false){
+            throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_LOOP] " + std::string(pcap_geterr(sniffer)));
         }
-        packetParser(NULL, &header, packet);
+        
     }
-
     pcap_close(sniffer);
 }
 

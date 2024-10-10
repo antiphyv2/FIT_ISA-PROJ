@@ -7,18 +7,22 @@
 
 //Atomic flag to be able to close the sniffer
 std::atomic<bool> snifferFlag(true);
-
+std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
 //Global variable to be able to close it after signal is caught
+
 
 void gracefulExit(int signal){
     snifferFlag.store(false);
+    if(sniffer){
+        pcap_breakloop(sniffer->getSniffer());
+    }
 }
 
 int main(int argc, char** argv){
     signal(SIGINT, gracefulExit);  
     DEBUG_PRINT("Starting isa project..." << std::endl);
     
-    std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
+    //std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
 
     try{
         sniffer->getParser()->parseArgs(argc, argv);
@@ -30,7 +34,7 @@ int main(int argc, char** argv){
     }
     
     connectionManager manager;
-    packetDisplay* display = new packetDisplay;
+    packetDisplay* display = nullptr; //= new packetDisplay;
     //std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
     std::promise<int> snifferPromise;
     std::future<int> snifferFuture = snifferPromise.get_future();
@@ -39,11 +43,14 @@ int main(int argc, char** argv){
     
     
     
-    display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
-    display->windowRefresh();
+    //display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
+    //display->windowRefresh();
 
     snifferThread.join();
-    delete display;
+    if(display){
+        delete display;
+    }
+    
     int result = snifferFuture.get();
     if(result != EXIT_SUCCESS){
         return result;

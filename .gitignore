@@ -7,3 +7,4 @@ packetSniffer.o
 isa-top
 backup.old
 packetDisplay.o
+connectionManager.o

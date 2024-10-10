@@ -11,7 +11,6 @@ class packetSniffer {
 private:
     cliParser parser;
     pcap_t* sniffer;
-    char errbuf[PCAP_ERRBUF_SIZE];
 public:
     
     packetSniffer();
@@ -58,9 +57,6 @@ public:
      * @param packet Pointer to the first caplen bytes of packet data
      */
     static void packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet);
-
-
-
 
 };
 #endif
