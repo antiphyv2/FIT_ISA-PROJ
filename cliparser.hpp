@@ -9,7 +9,7 @@ private:
     std::string interface; // interface name
     bool sortPackets = false; // sort output by number of packets
     bool sortBytes = false; // sort output by number of bytes
-    int refreshInterval = 1000; //interval of updating statisticss
+    uint16_t refreshInterval = 1000; //interval of updating statisticss
 
 public:
     /**

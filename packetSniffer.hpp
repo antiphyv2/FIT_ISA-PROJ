@@ -2,6 +2,7 @@
 #define PACKET_SNIFFER_HPP
 
 #include "cliparser.hpp"
+#include "connectionManager.hpp"
 #include <pcap/pcap.h>
 
 class packetSniffer {
@@ -34,13 +35,13 @@ public:
      * @brief Runs the sniffer
      * 
      */
-    void runSniffer(int argc, char** argv, std::promise<int> promise);
+    void runSniffer(std::promise<int> promise, connectionManager* manager);
 
     /**
      * @brief Sniffs the packets
      * 
      */
-    void sniffThePackets();
+    void sniffThePackets(connectionManager* manager);
 
     /**
      * @brief Lists all available network interfaces

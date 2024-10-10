@@ -98,9 +98,9 @@ void packetDisplay::print(){
 void packetDisplay::windowRefresh(){
 
     if (this->srcIpPort != nullptr) {
-        wclear(this->srcIpPort);  // Clear if necessary
-        printDefaultWindow();     // Redraw window
-        wrefresh(this->srcIpPort); // Refresh after update
+        wclear(this->srcIpPort);
+        printDefaultWindow();     
+        wrefresh(this->srcIpPort); 
     }
 
     if (this->dstIpPort != nullptr) {

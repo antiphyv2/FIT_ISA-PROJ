@@ -16,13 +16,14 @@ pcap_t* packetSniffer::getSniffer(){
     return this->sniffer;
 }
 
-void packetSniffer::runSniffer(int argc, char** argv, std::promise<int> promise){
+void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager){
 
     int exit_value = EXIT_SUCCESS;
 
     try {
-        this->sniffThePackets();
+        this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
+        snifferFlag.store(false);
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
@@ -34,7 +35,7 @@ void packetSniffer::runSniffer(int argc, char** argv, std::promise<int> promise)
 //All functions needed to create the sniffer are taken from my IPK2 projecct and are based on an example from
 //https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer
 
-void packetSniffer::sniffThePackets(){
+void packetSniffer::sniffThePackets(connectionManager* manager){
 
     DEBUG_PRINT("Starting the packet sniffer..." << std::endl);
 
