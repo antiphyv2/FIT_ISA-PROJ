@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <iostream>
 #include <string.h>
+#include "main.hpp"
 
 
 enum textType {
@@ -14,7 +15,6 @@ enum textType {
 
 class packetDisplay {
 private:
-    bool setup = false;
     int refreshInterval = 1000;
     int mainWinHeight;
     int mainWinWidth;
@@ -23,11 +23,6 @@ private:
     WINDOW* proto;
     WINDOW* rx;
     WINDOW* tx;
-    WINDOW* rxBs;
-    WINDOW* rxPs;
-    WINDOW* txBs;
-    WINDOW* txPs;
-
 
 public:
     packetDisplay();

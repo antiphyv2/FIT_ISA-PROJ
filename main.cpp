@@ -15,6 +15,7 @@ void gracefulExit(int signal){
 }
 
 int main(int argc, char** argv){
+    signal(SIGINT, gracefulExit);  
     DEBUG_PRINT("Starting isa project..." << std::endl);
     
     std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
@@ -29,19 +30,20 @@ int main(int argc, char** argv){
     }
     
     connectionManager manager;
-    signal(SIGINT, gracefulExit);  
-
+    packetDisplay* display = new packetDisplay;
+    //std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
     std::promise<int> snifferPromise;
     std::future<int> snifferFuture = snifferPromise.get_future();
-    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager);
+    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager, display);
 
-    std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
+    
+    
+    
     display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
-    while(snifferFlag){
-        display->windowRefresh();
-    }
+    display->windowRefresh();
 
     snifferThread.join();
+    delete display;
     int result = snifferFuture.get();
     if(result != EXIT_SUCCESS){
         return result;
@@ -54,7 +56,6 @@ int main(int argc, char** argv){
     // }
     
     DEBUG_PRINT("Ending isa project..." << std::endl);
-
     return EXIT_SUCCESS;
 }
 

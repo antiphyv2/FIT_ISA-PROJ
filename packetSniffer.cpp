@@ -16,14 +16,14 @@ pcap_t* packetSniffer::getSniffer(){
     return this->sniffer;
 }
 
-void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager){
+void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager, packetDisplay* display){
 
     int exit_value = EXIT_SUCCESS;
 
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
-        snifferFlag.store(false);
+        delete display;
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
@@ -42,8 +42,9 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
     
     sniffer = pcap_open_live(this->getParser()->getInterface().c_str(), BUFSIZ, 1, 1000, errbuf);
     if(!sniffer){
-        std::cerr << "ERROR: [PCAP_OPEN_LIVE] Interface named ";
-        throw packetSnifferException(SNIFFER_ERROR, errbuf);
+        snifferFlag.store(false);
+        //std::cerr << "ERROR: [PCAP_OPEN_LIVE] Interface named ";
+        throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
     }
 
     // int retCode = pcap_loop(sniffer, 0, packetParser, NULL);
@@ -61,9 +62,7 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
         packetParser(NULL, &header, packet);
     }
 
-
     pcap_close(sniffer);
-    throw packetSnifferException(SNIFFER_OK, "Sniffer ended correctly.");
 }
 
 void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet){

@@ -3,6 +3,7 @@
 
 #include "cliparser.hpp"
 #include "connectionManager.hpp"
+#include "packetDisplay.hpp"
 #include <pcap/pcap.h>
 
 class packetSniffer {
@@ -35,7 +36,7 @@ public:
      * @brief Runs the sniffer
      * 
      */
-    void runSniffer(std::promise<int> promise, connectionManager* manager);
+    void runSniffer(std::promise<int> promise, connectionManager* manager, packetDisplay* display);
 
     /**
      * @brief Sniffs the packets
