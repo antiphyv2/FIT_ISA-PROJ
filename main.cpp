@@ -14,8 +14,19 @@ void gracefulExit(int signal){
 }
 
 int main(int argc, char** argv){
-    // std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
-    // DEBUG_PRINT("Starting isa project..." << std::endl);
+    DEBUG_PRINT("Starting isa project..." << std::endl);
+    
+    std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
+
+    try{
+        sniffer->getParser()->parseArgs(argc, argv);
+    } catch (const argParserException &e){
+        if(e.getRetCode() != PRINT){
+            std::cerr << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
+    }
+    
 
     // signal(SIGINT, gracefulExit);  
 
@@ -29,11 +40,11 @@ int main(int argc, char** argv){
     // }
 
     std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
+    display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
     while(true){
         display->windowRefresh();
     }
     
-
     DEBUG_PRINT("Ending isa project..." << std::endl);
 
     return EXIT_SUCCESS;

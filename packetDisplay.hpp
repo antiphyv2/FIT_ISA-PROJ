@@ -15,6 +15,7 @@ enum textType {
 class packetDisplay {
 private:
     bool setup = false;
+    int refreshInterval = 1000;
     int mainWinHeight;
     int mainWinWidth;
     WINDOW* srcIpPort;
@@ -37,6 +38,7 @@ public:
     void printHeadLine();
     void printHeadLineMarker(WINDOW* win);
     void printTextCenter(WINDOW* win, int rowPos, const char* text, textType type);
+    void setRefreshInterval(int interval);
 };
 
 #endif

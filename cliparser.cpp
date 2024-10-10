@@ -11,7 +11,7 @@ void cliParser::parseArgs(int argc, char** argv){
     DEBUG_PRINT("Arg number: " << argc << std::endl);
 
     int option;
-    while((option = getopt(argc, argv, "i:s:hl")) != -1){
+    while((option = getopt(argc, argv, "i:s:t:hl")) != -1){
         switch(option){
             case 'i':
                 this->interface = optarg;
@@ -37,6 +37,13 @@ void cliParser::parseArgs(int argc, char** argv){
             case 'l':
                 packetSniffer::listInterfaces();
                 throw argParserException(PRINT, "");
+            case 't':
+                char* pointer;
+                this->refreshInterval = (int) strtol(optarg, &pointer, 10);
+                if(*pointer != 0){
+                    throw argParserException(ERROR, "ERR: Time interval must be a number.");
+                }
+                break;
             default:
                 throw argParserException(DEFAULT, "Try ./isa-top -h for help.");
         }
@@ -45,6 +52,10 @@ void cliParser::parseArgs(int argc, char** argv){
 
 std::string cliParser::getInterface(){
     return this->interface;
+}
+
+int cliParser::getRefreshInterval(){
+    return this->refreshInterval;
 }
 
 bool cliParser::getSortPackets(){

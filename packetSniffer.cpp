@@ -21,13 +21,7 @@ void packetSniffer::runSniffer(int argc, char** argv, std::promise<int> promise)
     int exit_value = EXIT_SUCCESS;
 
     try {
-        this->getParser()->parseArgs(argc, argv);
         this->sniffThePackets();
-    } catch (const argParserException& e) {
-        if(e.getRetCode() != PRINT){
-            std::cerr << e.what() << std::endl;
-            exit_value = EXIT_FAILURE;
-        }
     } catch (const packetSnifferException& e){
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
@@ -89,6 +83,8 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     case ETHERTYPE_IP: {
         //Get the ip header to determine protocol
         struct ip* ip_header = (struct ip*) packet;
+        std::cout << "src IP: " << inet_ntoa(ip_header->ip_src) << std::endl;
+        std::cout << "dst IP: " << inet_ntoa(ip_header->ip_dst) << std::endl;;
         if (ip_header->ip_p == IPPROTO_TCP) {
             printf("packet type: ipv4 TCP\n");
         } else if (ip_header->ip_p == IPPROTO_UDP) {
@@ -101,6 +97,17 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
 
     case ETHERTYPE_IPV6: {
         struct ip6_hdr* ipv6_header = (struct ip6_hdr*) packet;
+
+        char src_ipv6[INET6_ADDRSTRLEN];
+        char dst_ipv6[INET6_ADDRSTRLEN];
+
+        //Use inet_ntop since inet_ntoa is only used for ipv4 addresses, it should also be fine with RFC 5952 when reading this site: https://pubs.opengroup.org/onlinepubs/009604499/functions/inet_ntop.html
+        inet_ntop(AF_INET6, &ipv6_header->ip6_src, src_ipv6, INET6_ADDRSTRLEN);
+        inet_ntop(AF_INET6, &ipv6_header->ip6_dst, dst_ipv6, INET6_ADDRSTRLEN);
+
+        std::cout << "src IPv6: " << src_ipv6 << std::endl;
+        std::cout << "dst IP: " << dst_ipv6 << std::endl;;
+
         uint8_t next_header = ipv6_header->ip6_ctlun.ip6_un1.ip6_un1_nxt;
         if(next_header == IPPROTO_TCP){
             printf("packet type: ipv6 TCP\n");
@@ -115,7 +122,6 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     default:
         break;
     }
-
     DEBUG_PRINT("Packet parsed..." << std::endl);
 
 }

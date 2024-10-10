@@ -9,6 +9,7 @@ private:
     std::string interface; // interface name
     bool sortPackets = false; // sort output by number of packets
     bool sortBytes = false; // sort output by number of bytes
+    int refreshInterval = 1000; //interval of updating statisticss
 
 public:
     /**
@@ -39,6 +40,13 @@ public:
      * @return bool sort by bytes flag
      */
     bool getSortBytes();
+
+    /**
+     * @brief Get interval of refreshing window
+     * 
+     * @return int time interval
+     */
+    int getRefreshInterval();
 
     /**
      * @brief Set interface name

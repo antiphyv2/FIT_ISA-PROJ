@@ -33,6 +33,10 @@ packetDisplay::~packetDisplay(){
     endwin();
 }
 
+void packetDisplay::setRefreshInterval(int interval){
+    this->refreshInterval = interval;
+}
+
 void packetDisplay::printTextCenter(WINDOW* win, int rowPos, const char* text, textType type){
 
     int winHeight, winWidth;
@@ -122,5 +126,5 @@ void packetDisplay::windowRefresh(){
         printDefaultWindow();
         wrefresh(this->tx);
     }
-    napms(1000);
+    napms(this->refreshInterval);
 }
