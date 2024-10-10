@@ -42,9 +42,11 @@ int main(int argc, char** argv){
 
     
     
-    
-    //display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
-    //display->windowRefresh();
+    if(display){
+        display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
+        display->windowRefresh();
+    }
+
 
     snifferThread.join();
     if(display){
