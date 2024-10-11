@@ -66,7 +66,6 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     DEBUG_PRINT("Parsing packet..." << std::endl);
 
     //Print frame length
-    printf("frame length: %u\n", pkthdr->len);
     parsedPacket.packetLength = pkthdr->len;
 
     //Find out if type is IPV4, IPV6
@@ -82,17 +81,18 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         struct ip* ip_header = (struct ip*) packet;
         parsedPacket.dstIP = std::string(inet_ntoa(ip_header->ip_dst));
         parsedPacket.srcIP = std::string(inet_ntoa(ip_header->ip_src));
-        std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
-        std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;
 
         if (ip_header->ip_p == IPPROTO_TCP) {
             parsedPacket.protocol.append("tcp");
-            printf("packet type: ipv4 TCP\n");
+            struct tcphdr* tcp_header = (struct tcphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
+            parsedPacket.srcPort = ntohs(tcp_header->th_sport);
+            parsedPacket.dstPort = ntohs(tcp_header->th_dport);
         } else if (ip_header->ip_p == IPPROTO_UDP) {
-            printf("packet type: ipv4 UDP\n");
             parsedPacket.protocol.append("udp");
+            struct udphdr *udp_header = (struct udphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
+            parsedPacket.srcPort = ntohs(udp_header->uh_sport);
+            parsedPacket.dstPort = ntohs(udp_header->uh_dport);
         } else if(ip_header->ip_p == IPPROTO_ICMP) {
-            printf("packet type: ipv4 ICMP\n");
             parsedPacket.protocol.append("icmp");
         }
         break;
@@ -108,21 +108,23 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         inet_ntop(AF_INET6, &ipv6_header->ip6_src, src_ipv6, INET6_ADDRSTRLEN);
         inet_ntop(AF_INET6, &ipv6_header->ip6_dst, dst_ipv6, INET6_ADDRSTRLEN);
 
-        std::cout << "src IPv6: " << src_ipv6 << std::endl;
-        std::cout << "dst IP: " << dst_ipv6 << std::endl;
         parsedPacket.srcIP = src_ipv6;
         parsedPacket.dstIP = dst_ipv6;
+
+        struct ip* ip_header = (struct ip*) packet;
+        int ipv6_header_length = 40;
 
         uint8_t next_header = ipv6_header->ip6_ctlun.ip6_un1.ip6_un1_nxt;
         if(next_header == IPPROTO_TCP){
             parsedPacket.protocol.append("tcp");
-            printf("packet type: ipv6 TCP\n");
+            parsedPacket.srcPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_sport);
+            parsedPacket.dstPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_dport);
         } else if(next_header == IPPROTO_UDP){
             parsedPacket.protocol.append("udp");
-            printf("packet type: ipv6 UDP\n");
+            parsedPacket.srcPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_sport);
+            parsedPacket.dstPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_dport);
         } else if(next_header == IPPROTO_ICMPV6){
             parsedPacket.protocol.append("icmp");
-            printf("packet type: ipv6 ICMPv6\n");
         }
         break;
     }
@@ -130,7 +132,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     default:
         break;
     }
-
+    manager->addConnection(parsedPacket);
     DEBUG_PRINT("Packet parsed..." << std::endl);
 
 }

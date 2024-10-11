@@ -24,6 +24,7 @@ class connectionManager {
 public:
     connectionManager();
     ~connectionManager();
+    void addConnection(capturedPacket packet);
 };
 
 
