@@ -6,39 +6,35 @@ connectionManager::connectionManager(){
 connectionManager::~connectionManager(){}
 
 void connectionManager::addConnection(capturedPacket packet){
-    // std::cout << "src IP: " << packet.srcIP << std::endl;
-    // std::cout << "dst IP: " << packet.dstIP << std::endl;
-    // std::cout << "src port: " << packet.srcPort << std::endl;
-    // std::cout << "dst port: " << packet.dstPort << std::endl;
-    // std::cout << "protocol: " << packet.protocol << std::endl;
-    // std::cout << "packet length: " << packet.packetLength << std::endl;
 
-
-    std::tuple mapKey = std::make_tuple(packet.srcIP, packet.dstIP, packet.srcPort, packet.dstPort, packet.protocol);
-    std::tuple mapKeyReverse = std::make_tuple(packet.dstIP, packet.srcIP, packet.dstPort, packet.srcPort, packet.protocol);
-    auto search = this->connectionMap.find(mapKey);
-    auto searchReverse = this->connectionMap.find(mapKeyReverse);
-
-
+    std::tuple forwardConnection = std::make_tuple(packet.srcIP, packet.dstIP, packet.srcPort, packet.dstPort, packet.protocol);
+    std::tuple reverseConnection = std::make_tuple(packet.dstIP, packet.srcIP, packet.dstPort, packet.srcPort, packet.protocol);
+    
+    auto search = this->connectionMap.find(forwardConnection);
     if(search != this->connectionMap.end()){
-        this->connectionMap[mapKey].packetsTx++;
-        this->connectionMap[mapKey].totalDataTx += packet.packetLength;
-    } else if(searchReverse != this->connectionMap.end()){
-        this->connectionMap[mapKeyReverse].packetsRx++;
-        this->connectionMap[mapKeyReverse].totalDataRx += packet.packetLength;
-    } else {
-        connectionInfo newConnection;
-        newConnection.srcIP = packet.srcIP; 
-        newConnection.dstIP = packet.dstIP;
-        newConnection.srcPort = packet.srcPort;
-        newConnection.dstPort = packet.dstPort;
-        newConnection.protocol = packet.protocol;
-        newConnection.packetsTx = 1;
-        newConnection.packetsRx = 0;
-        newConnection.totalDataTx = packet.packetLength;
-        newConnection.totalDataRx = 0;
-        this->connectionMap[mapKey] = newConnection;
+        this->connectionMap[forwardConnection].packetsTx++;
+        this->connectionMap[forwardConnection].totalDataTx += packet.packetLength;
+        return;
     }
+    auto searchReverse = this->connectionMap.find(reverseConnection);
+    if(searchReverse != this->connectionMap.end()){
+        this->connectionMap[reverseConnection].packetsRx++;
+        this->connectionMap[reverseConnection].totalDataRx += packet.packetLength;
+        return;
+    }
+
+    //If the connection is not in the map, create a new one
+    connectionInfo newConnection;
+    newConnection.srcIP = packet.srcIP; 
+    newConnection.dstIP = packet.dstIP;
+    newConnection.srcPort = packet.srcPort;
+    newConnection.dstPort = packet.dstPort;
+    newConnection.protocol = packet.protocol;
+    newConnection.packetsTx = 1;
+    newConnection.packetsRx = 0;
+    newConnection.totalDataTx = packet.packetLength;
+    newConnection.totalDataRx = 0;
+    this->connectionMap[forwardConnection] = newConnection;
 }
 
 void connectionManager::printConnections(){

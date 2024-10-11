@@ -61,7 +61,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
 
     connectionManager* manager = reinterpret_cast<connectionManager*>(user);
 
-    capturedPacket parsedPacket;
+    capturedPacket parsedPacket = {};
 
     DEBUG_PRINT("Parsing packet..." << std::endl);
 
