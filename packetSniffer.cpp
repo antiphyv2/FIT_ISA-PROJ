@@ -132,6 +132,12 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     default:
         break;
     }
+    std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
+    std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;
+    std::cout << "src port: " << parsedPacket.srcPort << std::endl;
+    std::cout << "dst port: " << parsedPacket.dstPort << std::endl;
+    std::cout << "protocol: " << parsedPacket.protocol << std::endl;
+    std::cout << "packet length: " << parsedPacket.packetLength << std::endl;
     manager->addConnection(parsedPacket);
     DEBUG_PRINT("Packet parsed..." << std::endl);
 

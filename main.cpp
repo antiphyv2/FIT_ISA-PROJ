@@ -52,6 +52,8 @@ int main(int argc, char** argv){
     if(display){
         delete display;
     }
+
+    manager.printConnections();
     
     int result = snifferFuture.get();
     if(result != EXIT_SUCCESS){
