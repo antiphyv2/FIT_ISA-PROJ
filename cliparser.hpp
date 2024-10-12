@@ -2,13 +2,13 @@
 #define CLIPARSER_HPP
 
 #include "main.hpp"
+#include "connectionManager.hpp"
 
 
 class cliParser {
 private:
     std::string interface; // interface name
-    bool sortPackets = false; // sort output by number of packets
-    bool sortBytes = false; // sort output by number of bytes
+    sortBy sortType = UNSPECIFIED; // sorting type (bytes default)
     uint16_t refreshInterval = 1000; //interval of updating statisticss
 
 public:
@@ -28,18 +28,11 @@ public:
     std::string getInterface();
 
     /**
-     * @brief Get sort by packets flag
+     * @brief Get the sort type
      * 
-     * @return bool sort by packets flag
+     * @return sortBy type of sorting
      */
-    bool getSortPackets();
-
-    /**
-     * @brief Get sort by bytes flag
-     * 
-     * @return bool sort by bytes flag
-     */
-    bool getSortBytes();
+    sortBy getSortType();
 
     /**
      * @brief Get interval of refreshing window
@@ -54,20 +47,6 @@ public:
      * @param interface interface name
      */
     void setInterface(std::string interface);
-
-    /**
-     * @brief Set sort by packets flag
-     * 
-     * @param sortPackets sort by packets flag
-     */
-    void setSortPackets(bool sortPackets);
-
-    /**
-     * @brief Set sort by bytes flag
-     * 
-     * @param sortBytes sort by bytes flag
-     */
-    void setSortBytes(bool sortBytes);
 
     /**
      * @brief Prints help message

@@ -53,7 +53,7 @@ int main(int argc, char** argv){
         delete display;
     }
 
-    manager.printConnections();
+    manager.parseConnecionVector(sniffer->getParser()->getSortType());
     
     int result = snifferFuture.get();
     if(result != EXIT_SUCCESS){

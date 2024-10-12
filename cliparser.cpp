@@ -24,14 +24,14 @@ void cliParser::parseArgs(int argc, char** argv){
                     throw argParserException(ERROR, "ERR: -s parameter can only have b|p argument, see -h for usage.");
                 }
 
-                if(this->sortBytes || this->sortPackets){
+                if(this->sortType == BYTE || this->sortType == PACKET){
                     throw argParserException(ERROR, "ERR: You can sort only by 1 parameter at once.");
                 }
 
                 if(optarg[0] == 'b'){
-                    this->sortBytes = true;
+                    this->sortType = BYTE;
                 } else {
-                    this->sortPackets = true;
+                    this->sortType = PACKET;
                 }
                 break;
             case 'l':
@@ -48,6 +48,10 @@ void cliParser::parseArgs(int argc, char** argv){
                 throw argParserException(DEFAULT, "Try ./isa-top -h for help.");
         }
     }
+
+    if(this->sortType == UNSPECIFIED){
+        this->sortType = BYTE;
+    }
 }
 
 std::string cliParser::getInterface(){
@@ -58,22 +62,10 @@ int cliParser::getRefreshInterval(){
     return this->refreshInterval;
 }
 
-bool cliParser::getSortPackets(){
-    return this->sortPackets;
-}
-
-bool cliParser::getSortBytes(){
-    return this->sortBytes;
+sortBy cliParser::getSortType(){
+    return this->sortType;
 }
 
 void cliParser::setInterface(std::string interface){
     this->interface = interface;
-}
-
-void cliParser::setSortPackets(bool sortPackets){
-    this->sortPackets = sortPackets;
-}
-
-void cliParser::setSortBytes(bool sortBytes){
-    this->sortBytes = sortBytes;
 }

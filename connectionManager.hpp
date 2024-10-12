@@ -55,9 +55,10 @@ public:
     ~connectionManager();
     void addConnection(capturedPacket packet);
     void printConnections();
-    void parseConnecionVector();
+    void parseConnecionVector(sortBy sortType);
     void sortConnections(sortBy sortType);
     void clearConnetionMap();
+    void clearConnectionVector();
 };
 
 #endif

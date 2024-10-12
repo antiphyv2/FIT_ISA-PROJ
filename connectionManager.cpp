@@ -37,25 +37,32 @@ void connectionManager::addConnection(capturedPacket packet){
     this->connectionMap[forwardConnection] = newConnection;
 }
 
-void connectionManager::parseConnecionVector(){
+void connectionManager::parseConnecionVector(sortBy sortType){
     for(auto const& pair : this->connectionMap){
         this->connectionVector.push_back(pair.second);
     }
     this->clearConnetionMap();
+    sortConnections(sortType);
+    printConnections();
+    clearConnectionVector();
 }
 
 void connectionManager::clearConnetionMap(){
     this->connectionMap.clear();
 }
 
+void connectionManager::clearConnectionVector(){
+    this->connectionVector.clear();
+}
+
 void connectionManager::sortConnections(sortBy sortType){
     if(sortType == BYTE || sortType == UNSPECIFIED){
         std::sort(this->connectionVector.begin(), this->connectionVector.end(), [](connectionInfo const& x, connectionInfo const& y)
-            {return y.totalDataTx > y.totalDataTx;
+            {return x.totalDataTx + x.totalDataRx > y.totalDataTx + y.totalDataRx;
         });
     } else if(sortType == PACKET){
         std::sort(this->connectionVector.begin(), this->connectionVector.end(), [](connectionInfo const& x, connectionInfo const& y){
-            return x.packetsTx > y.packetsTx;
+            return x.packetsTx + x.packetsRx > y.packetsTx + y.packetsRx;
         });
     }
 }
@@ -75,9 +82,11 @@ void connectionManager::printConnections(){
     //     std::cout << "Total Data Tx: " << value.totalDataTx << ", Total Data Rx: " << value.totalDataRx << "\n";
     // }
 
-    // for (auto const& pair : connectionMap) {
-    // auto key = pair.first;
-    // auto value = pair.second;
-    // std::cout << std::get<0>(key) << ", " << std::get<1>(key) << ", " << value.packetsTx << ", " << value.packetsRx << ", " << value.totalDataTx << ", " << value.totalDataRx << std::endl;
-    // }
+    for(const auto& connection : this->connectionVector){
+        std::cout << "Src IP: " << connection.srcIP << ", Dst IP: " << connection.dstIP << ", ";
+        std::cout << "Src Port: " << connection.srcPort << ", Dst Port: " << connection.dstPort << ", ";
+        std::cout << "Protocol: " << connection.protocol << std::endl;
+        std::cout << "Packets Tx: " << connection.packetsTx << ", Packets Rx: " << connection.packetsRx << std::endl;
+        std::cout << "Total Data Tx: " << connection.totalDataTx << ", Total Data Rx: " << connection.totalDataRx << std::endl;
+    }
 }
