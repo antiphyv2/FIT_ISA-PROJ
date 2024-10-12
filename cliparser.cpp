@@ -46,7 +46,6 @@ void cliParser::parseArgs(int argc, char** argv){
                 throw argParserException(DEFAULT, "Try ./isa-top -h for help.");
         }
     }
-
 }
 
 std::string cliParser::getInterface(){

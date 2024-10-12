@@ -18,7 +18,6 @@ enum textType {
 
 class packetDisplay {
 private:
-    int refreshInterval = 1000;
     int mainWinHeight;
     int mainWinWidth;
     WINDOW* srcIpPort;
@@ -36,7 +35,6 @@ public:
     void printHeadLine();
     void printHeadLineMarker(WINDOW* win);
     void printTextCenter(WINDOW* win, int rowPos, const char* text, textType type);
-    void setRefreshInterval(int interval);
 
     void printVectorConnections(std::vector<connectionInfo>& connectionVector);
     std::string transformBytes(long double bytes);

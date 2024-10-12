@@ -10,9 +10,11 @@ std::atomic<bool> snifferFlag(true);
 std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
 
 
+//graceful exit function
 void gracefulExit(int signal){
     snifferFlag.store(false);
     if(sniffer){
+        //break the loop in the sniffer
         pcap_breakloop(sniffer->getSniffer());
     }
 }
@@ -20,6 +22,8 @@ void gracefulExit(int signal){
 int main(int argc, char** argv){
     signal(SIGINT, gracefulExit);  
 
+
+    //parse arguments
     try{
         sniffer->getParser()->parseArgs(argc, argv);
     } catch (const argParserException &e){
@@ -32,24 +36,31 @@ int main(int argc, char** argv){
     }
     
     connectionManager manager;
-    packetDisplay* display = new packetDisplay; //nullptr; //= new packetDisplay;
+    packetDisplay* display = new packetDisplay;
+    if(!display){
+        return EXIT_FAILURE;
+    }
+    
     std::promise<int> snifferPromise;
-    std::future<int> snifferFuture = snifferPromise.get_future();
-    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager);
+    std::future<int> snifferFuture = snifferPromise.get_future(); //create promise and future for sniffer thread to get the result
+    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager); //create separate thread for sniffer
 
     
     sortBy currentSortType = sniffer->getParser()->getSortType();
+    uint16_t refreshInterval = sniffer->getParser()->getRefreshInterval();
+
     if(display){
-        display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
+        //main loop for displaying the data
         while(snifferFlag){
-            manager.parseConnecionVector(currentSortType);
-            display->windowRefresh(manager.getConnectionVector());
+            manager.parseConnecionVector(currentSortType); //copy map of connections to vector and sort it
+            display->windowRefresh(manager.getConnectionVector()); //refresh the window with updated data
             manager.clearConnectionVector();
-            std::this_thread::sleep_for(std::chrono::seconds(1));
+            std::this_thread::sleep_for(std::chrono::seconds(refreshInterval)); //sleep for 
         }
 
     }
 
+    //wait for the sniffer thread to finish
     snifferThread.join();
 
     int result = snifferFuture.get();

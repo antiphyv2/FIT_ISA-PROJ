@@ -9,7 +9,7 @@ class cliParser {
 private:
     std::string interface; // interface name
     sortBy sortType = UNSPECIFIED; // sorting type (bytes default)
-    uint16_t refreshInterval = 1000; //interval of updating statisticss
+    uint16_t refreshInterval = 1; //default interval (s) of updating statistics
 
 public:
     /**
