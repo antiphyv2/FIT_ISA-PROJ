@@ -112,13 +112,47 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
         std::string protocol = connectionVector[i].protocol;
         std::string rxPackets = std::to_string(connectionVector[i].packetsRx);
         std::string txPackets = std::to_string(connectionVector[i].packetsTx);
+        std::string rxBytes = transformBytes(connectionVector[i].totalDataRx);
+        std::string txBytes = transformBytes(connectionVector[i].totalDataTx);
+
         printTextCenter(this->srcIpPort, i+4, sourceIpPort.c_str(), CLASSIC);
         printTextCenter(this->dstIpPort, i+4, destIpPort.c_str(), CLASSIC);
         printTextCenter(this->proto, i+4, protocol.c_str(), CLASSIC);
         printTextCenter(this->rx, i+4, rxPackets.c_str(), PACKETS);
         printTextCenter(this->tx, i+4, txPackets.c_str(), PACKETS);
+        printTextCenter(this->rx, i+4, rxBytes.c_str(), BYTES);
+        printTextCenter(this->tx, i+4, txBytes.c_str(), BYTES);
     }
 
+}
+
+ std::string packetDisplay::transformBytes(long double bytes){
+
+    std::string speed;
+
+    if(bytes >= 1024){
+        bytes /= 1024;
+        if(bytes >= 1024){
+            bytes /= 1024;
+            if(bytes >= 1024){
+                bytes /= 1024;
+                bytes = std::round(bytes * 10.0) / 10.0;
+                speed = "GBps";
+            } else {
+                bytes = std::round(bytes * 10.0) / 10.0;
+                speed = "MBps";
+            }
+        } else {
+            bytes = std::round(bytes * 10.0) / 10.0;
+            speed = "KBps";
+        }
+    } else {
+        bytes = std::round(bytes * 10.0) / 10.0;
+        speed = "Bps";
+    }
+    std::ostringstream out;
+    out << std::fixed << std::setprecision(1) << bytes;
+    return out.str() + speed;
 }
 
 void packetDisplay::windowRefresh(std::vector<connectionInfo>& connectionVector){

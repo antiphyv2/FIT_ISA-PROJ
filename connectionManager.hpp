@@ -31,10 +31,10 @@ struct connectionInfo{
     uint16_t srcPort;
     uint16_t dstPort;
     std::string protocol;
-    int packetsTx;
-    int packetsRx;
-    int totalDataTx;
-    int totalDataRx;
+    ulong packetsTx;
+    ulong packetsRx;
+    long double totalDataTx;
+    long double totalDataRx;
 };
 
 enum sortBy {

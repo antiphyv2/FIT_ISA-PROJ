@@ -2,8 +2,10 @@
 #define PACKET_DISPLAY_HPP
 
 #include <ncurses.h>
+#include <cmath>
 #include <iostream>
 #include <string.h>
+#include <iomanip>
 #include "main.hpp"
 #include "connectionManager.hpp"
 
@@ -37,6 +39,7 @@ public:
     void setRefreshInterval(int interval);
 
     void printVectorConnections(std::vector<connectionInfo>& connectionVector);
+    std::string transformBytes(long double bytes);
 };
 
 #endif
