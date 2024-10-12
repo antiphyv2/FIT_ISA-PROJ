@@ -95,7 +95,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         } else if(ip_header->ip_p == IPPROTO_ICMP) {
             parsedPacket.protocol.append("icmp");
         } else {
-            std::cout << "Unknown protocol" << std::endl;
+            //std::cout << "Unknown protocol" << std::endl;
         }
         break;
     }
@@ -128,7 +128,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         } else if(next_header == IPPROTO_ICMPV6){
             parsedPacket.protocol.append("icmp");
         } else {
-            std::cout << "Unknown protocol" << std::endl;
+            //std::cout << "Unknown protocol" << std::endl;
         }
         break;
     }
@@ -136,12 +136,12 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     default:
         return;
     }
-    std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
-    std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;
-    std::cout << "src port: " << parsedPacket.srcPort << std::endl;
-    std::cout << "dst port: " << parsedPacket.dstPort << std::endl;
-    std::cout << "protocol: " << parsedPacket.protocol << std::endl;
-    std::cout << "packet length: " << parsedPacket.packetLength << std::endl;
+    // std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
+    // std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;
+    // std::cout << "src port: " << parsedPacket.srcPort << std::endl;
+    // std::cout << "dst port: " << parsedPacket.dstPort << std::endl;
+    // std::cout << "protocol: " << parsedPacket.protocol << std::endl;
+    // std::cout << "packet length: " << parsedPacket.packetLength << std::endl;
 
     manager->addConnection(parsedPacket);
     DEBUG_PRINT("Packet parsed..." << std::endl);

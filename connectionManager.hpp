@@ -6,6 +6,7 @@
 #include <tuple>
 #include <map>
 #include <vector>
+#include <mutex>
 
 /**
  * @brief Structure for parsed packet from the sniffer
@@ -50,6 +51,7 @@ class connectionManager {
 private:
     std::map<std::tuple<std::string, std::string, uint16_t, uint16_t, std::string>, connectionInfo> connectionMap;
     std::vector<connectionInfo> connectionVector;
+    std::mutex threadMutex;
 public:
     connectionManager();
     ~connectionManager();
@@ -58,6 +60,7 @@ public:
     void parseConnecionVector(sortBy sortType);
     void sortConnections(sortBy sortType);
     void clearConnetionMap();
+    std::vector<connectionInfo>& getConnectionVector();
     void clearConnectionVector();
 };
 

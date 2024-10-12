@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string.h>
 #include "main.hpp"
+#include "connectionManager.hpp"
 
 
 enum textType {
@@ -28,12 +29,16 @@ public:
     packetDisplay();
     ~packetDisplay();
     void print();
-    void windowRefresh();
+    void windowRefresh(std::vector<connectionInfo>& connectionVector);
     void printDefaultWindow();
     void printHeadLine();
     void printHeadLineMarker(WINDOW* win);
     void printTextCenter(WINDOW* win, int rowPos, const char* text, textType type);
     void setRefreshInterval(int interval);
+
+    void printSrcIpPorts(std::vector<connectionInfo>& connectionVector);
+    void printDstIpPorts(std::vector<connectionInfo>& connectionVector);
+    void printProtocols(std::vector<connectionInfo>& connectionVector);
 };
 
 #endif

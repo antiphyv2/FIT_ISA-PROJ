@@ -6,6 +6,7 @@ connectionManager::connectionManager(){
 connectionManager::~connectionManager(){}
 
 void connectionManager::addConnection(capturedPacket packet){
+    std::lock_guard<std::mutex> lock(this->threadMutex);
 
     std::tuple forwardConnection = std::make_tuple(packet.srcIP, packet.dstIP, packet.srcPort, packet.dstPort, packet.protocol);
     std::tuple reverseConnection = std::make_tuple(packet.dstIP, packet.srcIP, packet.dstPort, packet.srcPort, packet.protocol);
@@ -38,17 +39,23 @@ void connectionManager::addConnection(capturedPacket packet){
 }
 
 void connectionManager::parseConnecionVector(sortBy sortType){
+    std::unique_lock<std::mutex> lock(this->threadMutex);
+
     for(auto const& pair : this->connectionMap){
         this->connectionVector.push_back(pair.second);
     }
-    this->clearConnetionMap();
+    //this->clearConnetionMap();
+    lock.unlock();
+
     sortConnections(sortType);
-    printConnections();
-    clearConnectionVector();
 }
 
 void connectionManager::clearConnetionMap(){
     this->connectionMap.clear();
+}
+
+std::vector<connectionInfo>& connectionManager::getConnectionVector() {
+    return this->connectionVector;
 }
 
 void connectionManager::clearConnectionVector(){
@@ -82,11 +89,11 @@ void connectionManager::printConnections(){
     //     std::cout << "Total Data Tx: " << value.totalDataTx << ", Total Data Rx: " << value.totalDataRx << "\n";
     // }
 
-    for(const auto& connection : this->connectionVector){
-        std::cout << "Src IP: " << connection.srcIP << ", Dst IP: " << connection.dstIP << ", ";
-        std::cout << "Src Port: " << connection.srcPort << ", Dst Port: " << connection.dstPort << ", ";
-        std::cout << "Protocol: " << connection.protocol << std::endl;
-        std::cout << "Packets Tx: " << connection.packetsTx << ", Packets Rx: " << connection.packetsRx << std::endl;
-        std::cout << "Total Data Tx: " << connection.totalDataTx << ", Total Data Rx: " << connection.totalDataRx << std::endl;
-    }
+    // for(const auto& connection : this->connectionVector){
+    //     std::cout << "Src IP: " << connection.srcIP << ", Dst IP: " << connection.dstIP << ", ";
+    //     std::cout << "Src Port: " << connection.srcPort << ", Dst Port: " << connection.dstPort << ", ";
+    //     std::cout << "Protocol: " << connection.protocol << std::endl;
+    //     std::cout << "Packets Tx: " << connection.packetsTx << ", Packets Rx: " << connection.packetsRx << std::endl;
+    //     std::cout << "Total Data Tx: " << connection.totalDataTx << ", Total Data Rx: " << connection.totalDataRx << std::endl;
+    // }
 }

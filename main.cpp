@@ -41,12 +41,13 @@ int main(int argc, char** argv){
     std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager, display);
 
     
-    
+    sortBy currentSortType = sniffer->getParser()->getSortType();
     if(display){
         display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
         while(snifferFlag){
-            
-            display->windowRefresh();
+            manager.parseConnecionVector(currentSortType);
+            display->windowRefresh(manager.getConnectionVector());
+            manager.clearConnectionVector();
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
 
@@ -58,7 +59,7 @@ int main(int argc, char** argv){
         delete display;
     }
 
-    manager.parseConnecionVector(sniffer->getParser()->getSortType());
+    
     
     int result = snifferFuture.get();
     if(result != EXIT_SUCCESS){
