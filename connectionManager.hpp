@@ -37,9 +37,9 @@ struct connectionInfo{
 };
 
 enum sortBy {
-    BYTES,
-    PACKETS,
-    DEFAULT
+    BYTE,
+    PACKET,
+    UNSPECIFIED,
 };
 
 /**
@@ -59,6 +59,5 @@ public:
     void sortConnections(sortBy sortType);
     void clearConnetionMap();
 };
-
 
 #endif

@@ -49,11 +49,11 @@ void connectionManager::clearConnetionMap(){
 }
 
 void connectionManager::sortConnections(sortBy sortType){
-    if(sortType == BYTES || sortType == DEFAULT){
+    if(sortType == BYTE || sortType == UNSPECIFIED){
         std::sort(this->connectionVector.begin(), this->connectionVector.end(), [](connectionInfo const& x, connectionInfo const& y)
             {return y.totalDataTx > y.totalDataTx;
         });
-    } else if(sortType == PACKETS){
+    } else if(sortType == PACKET){
         std::sort(this->connectionVector.begin(), this->connectionVector.end(), [](connectionInfo const& x, connectionInfo const& y){
             return x.packetsTx > y.packetsTx;
         });

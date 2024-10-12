@@ -71,6 +71,7 @@ enum snifferRetCodes {
     INTERFACE_ERROR,
     PACKET_ERROR,
     SNIFFER_OK,
-    SNIFFER_ERROR
+    SNIFFER_ERROR,
 };
+
 #endif
