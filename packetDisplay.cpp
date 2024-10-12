@@ -101,34 +101,22 @@ void packetDisplay::printDefaultWindow(){
     wborder(this->rx, 0, 0, 0, 0, 0, 0, 0, 0);
     printHeadLine();
 }
-void packetDisplay::printSrcIpPorts(std::vector<connectionInfo>& connectionVector){
+
+void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connectionVector){
     for (int i = 0; i < connectionVector.size(); i++){
         if(i == 10){
             break;
         }
-       std::string sourceIpPort = connectionVector[i].srcIP + ":" + std::to_string(connectionVector[i].srcPort);
-       printTextCenter(this->srcIpPort, i+4, sourceIpPort.c_str(), CLASSIC);
-    }
-
-}
-
-void packetDisplay::printDstIpPorts(std::vector<connectionInfo>& connectionVector){
-    for (int i = 0; i < connectionVector.size(); i++){
-        if(i == 10){
-            break;
-        }
-       std::string destIpPort = connectionVector[i].dstIP + ":" + std::to_string(connectionVector[i].dstPort);
-       printTextCenter(this->dstIpPort, i+4, destIpPort.c_str(), CLASSIC);
-    }
-
-}
-
-void packetDisplay::printProtocols(std::vector<connectionInfo>& connectionVector){
-    for (int i = 0; i < connectionVector.size(); i++){
-        if(i == 10){
-            break;
-        }
-       printTextCenter(this->proto, i+4, connectionVector[i].protocol.c_str(), CLASSIC);
+        std::string sourceIpPort = connectionVector[i].srcIP + ":" + std::to_string(connectionVector[i].srcPort);
+        std::string destIpPort = connectionVector[i].dstIP + ":" + std::to_string(connectionVector[i].dstPort);
+        std::string protocol = connectionVector[i].protocol;
+        std::string rxPackets = std::to_string(connectionVector[i].packetsRx);
+        std::string txPackets = std::to_string(connectionVector[i].packetsTx);
+        printTextCenter(this->srcIpPort, i+4, sourceIpPort.c_str(), CLASSIC);
+        printTextCenter(this->dstIpPort, i+4, destIpPort.c_str(), CLASSIC);
+        printTextCenter(this->proto, i+4, protocol.c_str(), CLASSIC);
+        printTextCenter(this->rx, i+4, rxPackets.c_str(), PACKETS);
+        printTextCenter(this->tx, i+4, txPackets.c_str(), PACKETS);
     }
 
 }
@@ -141,9 +129,7 @@ void packetDisplay::windowRefresh(std::vector<connectionInfo>& connectionVector)
     wclear(this->rx);
     wclear(this->tx);
     printDefaultWindow();
-    printSrcIpPorts(connectionVector);
-    printDstIpPorts(connectionVector);
-    printProtocols(connectionVector);
+    printVectorConnections(connectionVector);
     wrefresh(this->srcIpPort); 
     wrefresh(this->dstIpPort);
     wrefresh(this->proto);

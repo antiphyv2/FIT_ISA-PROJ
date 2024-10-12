@@ -36,9 +36,7 @@ public:
     void printTextCenter(WINDOW* win, int rowPos, const char* text, textType type);
     void setRefreshInterval(int interval);
 
-    void printSrcIpPorts(std::vector<connectionInfo>& connectionVector);
-    void printDstIpPorts(std::vector<connectionInfo>& connectionVector);
-    void printProtocols(std::vector<connectionInfo>& connectionVector);
+    void printVectorConnections(std::vector<connectionInfo>& connectionVector);
 };
 
 #endif
