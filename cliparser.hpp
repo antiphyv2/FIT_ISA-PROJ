@@ -42,13 +42,6 @@ public:
     int getRefreshInterval();
 
     /**
-     * @brief Set interface name
-     * 
-     * @param interface interface name
-     */
-    void setInterface(std::string interface);
-
-    /**
      * @brief Prints help message
      */
     void printHelp();

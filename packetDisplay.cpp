@@ -157,11 +157,11 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
 
 void packetDisplay::windowRefresh(std::vector<connectionInfo>& connectionVector){
 
-    // wclear(this->srcIpPort);
-    // wclear(this->dstIpPort);
-    // wclear(this->proto);
-    // wclear(this->rx);
-    // wclear(this->tx);
+    wclear(this->srcIpPort);
+    wclear(this->dstIpPort);
+    wclear(this->proto);
+    wclear(this->rx);
+    wclear(this->tx);
     printDefaultWindow();
     printVectorConnections(connectionVector);
     wrefresh(this->srcIpPort); 

@@ -47,9 +47,6 @@ void cliParser::parseArgs(int argc, char** argv){
         }
     }
 
-    if(this->sortType == UNSPECIFIED){
-        this->sortType = BYTE;
-    }
 }
 
 std::string cliParser::getInterface(){
@@ -62,8 +59,4 @@ int cliParser::getRefreshInterval(){
 
 sortBy cliParser::getSortType(){
     return this->sortType;
-}
-
-void cliParser::setInterface(std::string interface){
-    this->interface = interface;
 }

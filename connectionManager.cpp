@@ -25,7 +25,7 @@ void connectionManager::addConnection(capturedPacket packet){
     }
 
     //If the connection is not in the map, create a new one
-    connectionInfo newConnection;
+    connectionInfo newConnection = {};
     newConnection.srcIP = packet.srcIP;
     newConnection.dstIP = packet.dstIP;
     newConnection.srcPort = packet.srcPort;
@@ -33,8 +33,6 @@ void connectionManager::addConnection(capturedPacket packet){
     newConnection.protocol = packet.protocol;
     newConnection.packetsTx = 1;
     newConnection.totalDataTx = packet.packetLength;
-    newConnection.packetsRx = 0;
-    newConnection.totalDataRx = 0;
     this->connectionMap[forwardConnection] = newConnection;
 }
 
