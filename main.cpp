@@ -8,7 +8,6 @@
 //Atomic flag to be able to close the sniffer
 std::atomic<bool> snifferFlag(true);
 std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
-//Global variable to be able to close it after signal is caught
 
 
 void gracefulExit(int signal){
