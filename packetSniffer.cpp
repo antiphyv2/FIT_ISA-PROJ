@@ -15,16 +15,12 @@ pcap_t* packetSniffer::getSniffer(){
     return this->sniffer;
 }
 
-void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager, packetDisplay* display){
-
+void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager){
     int exit_value = EXIT_SUCCESS;
 
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
-        if(display != nullptr){
-            delete display;
-        }
         std::cerr << e.what() << std::endl;
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
@@ -44,7 +40,7 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
     char errbuf[PCAP_ERRBUF_SIZE];
     sniffer = pcap_open_live(this->getParser()->getInterface().c_str(), BUFSIZ, 1, 1000, errbuf);
     if(!sniffer){
-        //std::cerr << "ERROR: [PCAP_OPEN_LIVE] Interface named ";
+        snifferFlag.store(false);
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
     }
 

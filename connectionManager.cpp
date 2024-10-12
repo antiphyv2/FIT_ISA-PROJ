@@ -73,27 +73,3 @@ void connectionManager::sortConnections(sortBy sortType){
         });
     }
 }
-
-void connectionManager::printConnections(){
-    // for (const auto& [key, value] : connectionMap) {
-    //     // Print each key and value
-    //     std::cout << "Key (Connection): ";
-        
-    //     // Access the elements of the key (tuple) without saving the key in a separate variable
-    //     std::cout << std::get<0>(key) << ", " << std::get<1>(key) << ", ";
-    //     std::cout << std::get<2>(key) << ", " << std::get<3>(key) << ", ";
-    //     std::cout << std::get<4>(key) << "\n";
-
-    //     // Access and print the value
-    //     std::cout << "Packets Tx: " << value.packetsTx << ", Packets Rx: " << value.packetsRx << "\n";
-    //     std::cout << "Total Data Tx: " << value.totalDataTx << ", Total Data Rx: " << value.totalDataRx << "\n";
-    // }
-
-    // for(const auto& connection : this->connectionVector){
-    //     std::cout << "Src IP: " << connection.srcIP << ", Dst IP: " << connection.dstIP << ", ";
-    //     std::cout << "Src Port: " << connection.srcPort << ", Dst Port: " << connection.dstPort << ", ";
-    //     std::cout << "Protocol: " << connection.protocol << std::endl;
-    //     std::cout << "Packets Tx: " << connection.packetsTx << ", Packets Rx: " << connection.packetsRx << std::endl;
-    //     std::cout << "Total Data Tx: " << connection.totalDataTx << ", Total Data Rx: " << connection.totalDataRx << std::endl;
-    // }
-}

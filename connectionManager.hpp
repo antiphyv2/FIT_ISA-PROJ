@@ -56,7 +56,6 @@ public:
     connectionManager();
     ~connectionManager();
     void addConnection(capturedPacket packet);
-    void printConnections();
     void parseConnecionVector(sortBy sortType);
     void sortConnections(sortBy sortType);
     void clearConnetionMap();

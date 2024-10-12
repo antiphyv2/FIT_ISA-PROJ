@@ -35,7 +35,7 @@ public:
      * @brief Runs the sniffer
      * 
      */
-    void runSniffer(std::promise<int> promise, connectionManager* manager, packetDisplay* display);
+    void runSniffer(std::promise<int> promise, connectionManager* manager);
 
     /**
      * @brief Sniffs the packets
