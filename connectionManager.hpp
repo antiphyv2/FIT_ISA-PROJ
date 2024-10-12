@@ -5,7 +5,12 @@
 #include <string>
 #include <tuple>
 #include <map>
+#include <vector>
 
+/**
+ * @brief Structure for parsed packet from the sniffer
+ * 
+ */
 struct capturedPacket{
     std::string srcIP;
     std::string dstIP;
@@ -15,6 +20,10 @@ struct capturedPacket{
     int packetLength;
 };
 
+/**
+ * @brief Structure for connection stats like packets or bytes sent or received
+ * 
+ */
 struct connectionInfo{
     std::string srcIP;
     std::string dstIP;
@@ -27,14 +36,28 @@ struct connectionInfo{
     int totalDataRx;
 };
 
+enum sortBy {
+    BYTES,
+    PACKETS,
+    DEFAULT
+};
+
+/**
+ * @brief class for handling the connections
+ * 
+ */
 class connectionManager {
 private:
     std::map<std::tuple<std::string, std::string, uint16_t, uint16_t, std::string>, connectionInfo> connectionMap;
+    std::vector<connectionInfo> connectionVector;
 public:
     connectionManager();
     ~connectionManager();
     void addConnection(capturedPacket packet);
     void printConnections();
+    void parseConnecionVector();
+    void sortConnections(sortBy sortType);
+    void clearConnetionMap();
 };
 
 

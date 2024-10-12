@@ -138,6 +138,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     std::cout << "dst port: " << parsedPacket.dstPort << std::endl;
     std::cout << "protocol: " << parsedPacket.protocol << std::endl;
     std::cout << "packet length: " << parsedPacket.packetLength << std::endl;
+    
     manager->addConnection(parsedPacket);
     DEBUG_PRINT("Packet parsed..." << std::endl);
 
