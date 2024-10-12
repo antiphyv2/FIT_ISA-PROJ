@@ -134,7 +134,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     }
 
     default:
-        break;
+        return;
     }
     std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
     std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;

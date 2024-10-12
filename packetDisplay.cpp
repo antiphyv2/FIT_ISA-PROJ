@@ -106,7 +106,6 @@ void packetDisplay::print(){
 }
 
 void packetDisplay::windowRefresh(){
-    while(snifferFlag){
         if (this->srcIpPort != nullptr) {
             wclear(this->srcIpPort);
             printDefaultWindow();     
@@ -136,7 +135,5 @@ void packetDisplay::windowRefresh(){
             printDefaultWindow();
             wrefresh(this->tx);
         }
-        napms(this->refreshInterval);
-    }
     
 }

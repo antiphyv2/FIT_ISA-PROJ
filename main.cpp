@@ -34,7 +34,7 @@ int main(int argc, char** argv){
     }
     
     connectionManager manager;
-    packetDisplay* display = nullptr; //= new packetDisplay;
+    packetDisplay* display = new packetDisplay; //nullptr; //= new packetDisplay;
     //std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
     std::promise<int> snifferPromise;
     std::future<int> snifferFuture = snifferPromise.get_future();
@@ -44,7 +44,12 @@ int main(int argc, char** argv){
     
     if(display){
         display->setRefreshInterval(sniffer->getParser()->getRefreshInterval());
-        display->windowRefresh();
+        while(snifferFlag){
+            
+            display->windowRefresh();
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+
     }
 
 
