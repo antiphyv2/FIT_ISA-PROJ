@@ -64,6 +64,7 @@ public:
 enum parserExcCodes {
     ERROR,
     PRINT,
+    LIST_INTERFACE,
     DEFAULT,
 };
 

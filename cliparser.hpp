@@ -54,10 +54,4 @@ public:
     void printHelp();
 };
 
-enum parserRetCodes {
-    OK,
-    PRINT_HELP,
-    LIST_INTERFACES,
-};
-
 #endif

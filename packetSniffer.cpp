@@ -35,8 +35,6 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
 
 void packetSniffer::sniffThePackets(connectionManager* manager){
 
-    DEBUG_PRINT("Starting the packet sniffer..." << std::endl);
-
     char errbuf[PCAP_ERRBUF_SIZE];
     sniffer = pcap_open_live(this->getParser()->getInterface().c_str(), BUFSIZ, 1, 1000, errbuf);
     if(!sniffer){
@@ -56,10 +54,7 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
 void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet){
 
     connectionManager* manager = reinterpret_cast<connectionManager*>(user);
-
     capturedPacket parsedPacket = {};
-
-    DEBUG_PRINT("Parsing packet..." << std::endl);
 
     //Print frame length
     parsedPacket.packetLength = pkthdr->len;
@@ -90,8 +85,6 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
             parsedPacket.dstPort = ntohs(udp_header->uh_dport);
         } else if(ip_header->ip_p == IPPROTO_ICMP) {
             parsedPacket.protocol.append("icmp");
-        } else {
-            //std::cout << "Unknown protocol" << std::endl;
         }
         break;
     }
@@ -123,8 +116,6 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
             parsedPacket.dstPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_dport);
         } else if(next_header == IPPROTO_ICMPV6){
             parsedPacket.protocol.append("icmp");
-        } else {
-            //std::cout << "Unknown protocol" << std::endl;
         }
         break;
     }
@@ -132,21 +123,11 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     default:
         return;
     }
-    // std::cout << "src IP: " << parsedPacket.srcIP << std::endl;
-    // std::cout << "dst IP: " << parsedPacket.dstIP << std::endl;
-    // std::cout << "src port: " << parsedPacket.srcPort << std::endl;
-    // std::cout << "dst port: " << parsedPacket.dstPort << std::endl;
-    // std::cout << "protocol: " << parsedPacket.protocol << std::endl;
-    // std::cout << "packet length: " << parsedPacket.packetLength << std::endl;
 
     manager->addConnection(parsedPacket);
-    DEBUG_PRINT("Packet parsed..." << std::endl);
-
 }
 
 void packetSniffer::listInterfaces(){
-
-    DEBUG_PRINT("Listing available interfaces..." << std::endl);
 
     pcap_if_t *networkDevices;
     char errbuf[PCAP_ERRBUF_SIZE];
@@ -171,8 +152,6 @@ void packetSniffer::listInterfaces(){
         int_count++;
         dev = dev->next;
     }
-
-    DEBUG_PRINT("All interfaces listed..." << std::endl);
 
     pcap_freealldevs(networkDevices);
 

@@ -20,14 +20,15 @@ void gracefulExit(int signal){
 
 int main(int argc, char** argv){
     signal(SIGINT, gracefulExit);  
-    DEBUG_PRINT("Starting isa project..." << std::endl);
 
     try{
         sniffer->getParser()->parseArgs(argc, argv);
     } catch (const argParserException &e){
-        if(e.getRetCode() != PRINT){
+        if(e.getRetCode() == ERROR){
             std::cerr << e.what() << std::endl;
             return EXIT_FAILURE;
+        } else {
+            return EXIT_SUCCESS;
         }
     }
     
@@ -60,7 +61,6 @@ int main(int argc, char** argv){
         delete display;
     }
 
-    DEBUG_PRINT("Ending isa project..." << std::endl);
     return EXIT_SUCCESS;
 }
 

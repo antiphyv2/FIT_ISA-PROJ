@@ -8,8 +8,6 @@ void cliParser::printHelp(){
 }
 
 void cliParser::parseArgs(int argc, char** argv){
-    DEBUG_PRINT("Arg number: " << argc << std::endl);
-
     int option;
     while((option = getopt(argc, argv, "i:s:t:hl")) != -1){
         switch(option){
@@ -36,7 +34,7 @@ void cliParser::parseArgs(int argc, char** argv){
                 break;
             case 'l':
                 packetSniffer::listInterfaces();
-                throw argParserException(PRINT, "");
+                throw argParserException(LIST_INTERFACE, "");
             case 't':
                 char* pointer;
                 this->refreshInterval = (int) strtol(optarg, &pointer, 10);
