@@ -7,6 +7,8 @@
 
 //Atomic flag to be able to close the sniffer
 std::atomic<bool> snifferFlag(true);
+
+//Global sniffer pointer to be able to call breakloop in the signal handler
 std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
 
 
@@ -22,7 +24,6 @@ void gracefulExit(int signal){
 int main(int argc, char** argv){
     signal(SIGINT, gracefulExit);  
 
-
     //parse arguments
     try{
         sniffer->getParser()->parseArgs(argc, argv);
@@ -36,10 +37,7 @@ int main(int argc, char** argv){
     }
     
     connectionManager manager;
-    packetDisplay* display = new packetDisplay;
-    if(!display){
-        return EXIT_FAILURE;
-    }
+    std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
     
     std::promise<int> snifferPromise;
     std::future<int> snifferFuture = snifferPromise.get_future(); //create promise and future for sniffer thread to get the result
@@ -49,15 +47,12 @@ int main(int argc, char** argv){
     sortBy currentSortType = sniffer->getParser()->getSortType();
     uint16_t refreshInterval = sniffer->getParser()->getRefreshInterval();
 
-    if(display){
-        //main loop for displaying the data
-        while(snifferFlag){
-            manager.parseConnecionVector(currentSortType); //copy map of connections to vector and sort it
-            display->windowRefresh(manager.getConnectionVector()); //refresh the window with updated data
-            manager.clearConnectionVector();
-            std::this_thread::sleep_for(std::chrono::seconds(refreshInterval)); //sleep for 
-        }
-
+    //main loop for displaying the data
+    while(snifferFlag){
+        manager.parseConnecionVector(currentSortType); //copy map of connections to vector and sort it
+        display->windowRefresh(manager.getConnectionVector()); //refresh the window with updated data
+        manager.clearConnectionVector();
+        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval)); //sleep for 
     }
 
     //wait for the sniffer thread to finish
@@ -67,10 +62,7 @@ int main(int argc, char** argv){
     if(result == EXIT_FAILURE){
         return result;
     }
-    if(display != nullptr){
-        delete display;
-    }
-
+    
     return EXIT_SUCCESS;
 }
 

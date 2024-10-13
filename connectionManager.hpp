@@ -8,18 +8,6 @@
 #include <vector>
 #include <mutex>
 
-/**
- * @brief Structure for parsed packet from the sniffer
- * 
- */
-struct capturedPacket{
-    std::string srcIP;
-    std::string dstIP;
-    uint16_t srcPort;
-    uint16_t dstPort;
-    std::string protocol;
-    int packetLength;
-};
 
 /**
  * @brief Structure for connection stats like packets or bytes sent or received
@@ -55,7 +43,7 @@ private:
 public:
     connectionManager();
     ~connectionManager();
-    void addConnection(capturedPacket packet);
+    void addConnection(connectionInfo packet, int packetLength);
     void parseConnecionVector(sortBy sortType);
     void sortConnections(sortBy sortType);
     void clearConnetionMap();

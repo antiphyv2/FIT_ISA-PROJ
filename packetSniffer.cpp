@@ -54,10 +54,10 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
 void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr, const u_char* packet){
 
     connectionManager* manager = reinterpret_cast<connectionManager*>(user);
-    capturedPacket parsedPacket = {};
+    connectionInfo capturedPacket = {};
 
-    //Print frame length
-    parsedPacket.packetLength = pkthdr->len;
+    //Get packet length
+    int packetLength = pkthdr->len;
 
     //Find out if type is IPV4, IPV6
     uint16_t ethernet_type = ntohs(((struct ether_header*) packet)->ether_type);
@@ -70,21 +70,21 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     case ETHERTYPE_IP: {
         //Get the ip header to determine protocol
         struct ip* ip_header = (struct ip*) packet;
-        parsedPacket.dstIP = std::string(inet_ntoa(ip_header->ip_dst));
-        parsedPacket.srcIP = std::string(inet_ntoa(ip_header->ip_src));
+        capturedPacket.dstIP = std::string(inet_ntoa(ip_header->ip_dst));
+        capturedPacket.srcIP = std::string(inet_ntoa(ip_header->ip_src));
 
         if (ip_header->ip_p == IPPROTO_TCP) {
-            parsedPacket.protocol.append("tcp");
+            capturedPacket.protocol.append("tcp");
             struct tcphdr* tcp_header = (struct tcphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
-            parsedPacket.srcPort = ntohs(tcp_header->th_sport);
-            parsedPacket.dstPort = ntohs(tcp_header->th_dport);
+            capturedPacket.srcPort = ntohs(tcp_header->th_sport);
+            capturedPacket.dstPort = ntohs(tcp_header->th_dport);
         } else if (ip_header->ip_p == IPPROTO_UDP) {
-            parsedPacket.protocol.append("udp");
+            capturedPacket.protocol.append("udp");
             struct udphdr *udp_header = (struct udphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
-            parsedPacket.srcPort = ntohs(udp_header->uh_sport);
-            parsedPacket.dstPort = ntohs(udp_header->uh_dport);
+            capturedPacket.srcPort = ntohs(udp_header->uh_sport);
+            capturedPacket.dstPort = ntohs(udp_header->uh_dport);
         } else if(ip_header->ip_p == IPPROTO_ICMP) {
-            parsedPacket.protocol.append("icmp");
+            capturedPacket.protocol.append("icmp");
         }
         break;
     }
@@ -99,23 +99,23 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         inet_ntop(AF_INET6, &ipv6_header->ip6_src, src_ipv6, INET6_ADDRSTRLEN);
         inet_ntop(AF_INET6, &ipv6_header->ip6_dst, dst_ipv6, INET6_ADDRSTRLEN);
 
-        parsedPacket.srcIP = src_ipv6;
-        parsedPacket.dstIP = dst_ipv6;
+        capturedPacket.srcIP = src_ipv6;
+        capturedPacket.dstIP = dst_ipv6;
 
         struct ip* ip_header = (struct ip*) packet;
         int ipv6_header_length = 40;
 
         uint8_t next_header = ipv6_header->ip6_ctlun.ip6_un1.ip6_un1_nxt;
         if(next_header == IPPROTO_TCP){
-            parsedPacket.protocol.append("tcp");
-            parsedPacket.srcPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_sport);
-            parsedPacket.dstPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_dport);
+            capturedPacket.protocol.append("tcp");
+            capturedPacket.srcPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_sport);
+            capturedPacket.dstPort = ntohs(((struct tcphdr*) (packet + ipv6_header_length))->th_dport);
         } else if(next_header == IPPROTO_UDP){
-            parsedPacket.protocol.append("udp");
-            parsedPacket.srcPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_sport);
-            parsedPacket.dstPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_dport);
+            capturedPacket.protocol.append("udp");
+            capturedPacket.srcPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_sport);
+            capturedPacket.dstPort = ntohs(((struct udphdr*) (packet + ipv6_header_length))->uh_dport);
         } else if(next_header == IPPROTO_ICMPV6){
-            parsedPacket.protocol.append("icmp");
+            capturedPacket.protocol.append("icmp");
         }
         break;
     }
@@ -124,7 +124,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         return;
     }
 
-    manager->addConnection(parsedPacket);
+    manager->addConnection(capturedPacket, packetLength);
 }
 
 void packetSniffer::listInterfaces(){

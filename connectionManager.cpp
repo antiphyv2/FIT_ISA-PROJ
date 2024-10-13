@@ -5,7 +5,7 @@ connectionManager::connectionManager(){
 }
 connectionManager::~connectionManager(){}
 
-void connectionManager::addConnection(capturedPacket packet){
+void connectionManager::addConnection(connectionInfo packet, int packetLength){
     std::lock_guard<std::mutex> lock(this->threadMutex);
 
     std::tuple forwardConnection = std::make_tuple(packet.srcIP, packet.dstIP, packet.srcPort, packet.dstPort, packet.protocol);
@@ -14,26 +14,20 @@ void connectionManager::addConnection(capturedPacket packet){
     auto search = this->connectionMap.find(forwardConnection);
     if(search != this->connectionMap.end()){
         this->connectionMap[forwardConnection].packetsTx++;
-        this->connectionMap[forwardConnection].totalDataTx += packet.packetLength;
+        this->connectionMap[forwardConnection].totalDataTx += packetLength;
         return;
     }
     auto searchReverse = this->connectionMap.find(reverseConnection);
     if(searchReverse != this->connectionMap.end()){
         this->connectionMap[reverseConnection].packetsRx++;
-        this->connectionMap[reverseConnection].totalDataRx += packet.packetLength;
+        this->connectionMap[reverseConnection].totalDataRx += packetLength;
         return;
     }
 
-    //If the connection is not in the map, create a new one
-    connectionInfo newConnection = {};
-    newConnection.srcIP = packet.srcIP;
-    newConnection.dstIP = packet.dstIP;
-    newConnection.srcPort = packet.srcPort;
-    newConnection.dstPort = packet.dstPort;
-    newConnection.protocol = packet.protocol;
-    newConnection.packetsTx = 1;
-    newConnection.totalDataTx = packet.packetLength;
-    this->connectionMap[forwardConnection] = newConnection;
+    //If the connection is not in the map, add it and fill information about transmitted data
+    packet.packetsTx = 1;
+    packet.totalDataTx = packetLength;
+    this->connectionMap[forwardConnection] = packet;
 }
 
 void connectionManager::parseConnecionVector(sortBy sortType){
