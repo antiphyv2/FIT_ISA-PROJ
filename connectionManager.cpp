@@ -36,7 +36,7 @@ void connectionManager::parseConnecionVector(sortBy sortType){
     for(auto const& pair : this->connectionMap){
         this->connectionVector.push_back(pair.second);
     }
-    //this->clearConnetionMap();
+    this->clearConnetionMap();
     lock.unlock();
 
     sortConnections(sortType);
