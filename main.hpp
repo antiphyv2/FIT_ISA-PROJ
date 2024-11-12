@@ -1,12 +1,6 @@
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
-#ifdef DEBUG_MODE
-#define DEBUG_PRINT(x) std::cout << x;
-#else
-#define DEBUG_PRINT(x) do {} while(false);
-#endif
-
 #include <iostream>
 #include <thread>
 #include <future>
@@ -26,9 +20,15 @@
 #include <netinet/icmp6.h>
 #include <csignal>
 
-
+//Atomic flag to be able to close the sniffer
 extern std::atomic<bool> snifferFlag;
 
+
+/**
+ * @brief Function called upon pressing CTRL+C which closes the sniffer
+ * 
+ * @param signal signal number
+ */
 void gracefulExit(int signal);
 
 #endif
