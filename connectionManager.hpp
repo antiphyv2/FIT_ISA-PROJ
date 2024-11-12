@@ -1,3 +1,9 @@
+/**
+ * @file connectionManager.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file defining manager and its functions for storing connections
+ */
+
 #ifndef CONNECTION_MANAGER_HPP
 #define CONNECTION_MANAGER_HPP
 

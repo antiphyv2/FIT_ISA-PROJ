@@ -1,3 +1,9 @@
+/**
+ * @file connectionManager.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Implementation of the connection manager functions
+ */
+
 #include"connectionManager.hpp"
 
 connectionManager::connectionManager(){
