@@ -18,6 +18,7 @@ pcap_t* packetSniffer::getSniffer(){
 void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager){
     int exit_value = EXIT_SUCCESS;
 
+    //Sniff the packets and catch errors as exceptions
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
@@ -27,6 +28,8 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
         }
         
     }
+
+    //Set the promise value for the main thread later on
     promise.set_value(exit_value);
 }
 
@@ -36,18 +39,25 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
 void packetSniffer::sniffThePackets(connectionManager* manager){
 
     char errbuf[PCAP_ERRBUF_SIZE];
+
+    //Open the sniffer
     sniffer = pcap_open_live(this->getParser()->getInterface().c_str(), BUFSIZ, 1, 1000, errbuf);
+
+    //Sniffer could not be opened
     if(!sniffer){
         snifferFlag.store(false);
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
     }
 
+    //Parse the packets in a loop
     if (pcap_loop(sniffer, 0, packetParser, reinterpret_cast<u_char*>(manager)) != 0) {
         if(snifferFlag.load() != false){
             throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_LOOP] " + std::string(pcap_geterr(sniffer)));
         }
         
     }
+
+    //Close the sniffer after breaking the loop
     pcap_close(sniffer);
 }
 
@@ -59,10 +69,10 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     //Get packet length
     int packetLength = pkthdr->len;
 
-    //Find out if type is IPV4, IPV6
+    //Find out if type is IPv4, IPv6
     uint16_t ethernet_type = ntohs(((struct ether_header*) packet)->ether_type);
 
-    //Now we can skip the datalink ethernet header and get to the ip header
+    //Now we can skip the datalink ethernet header and get to the IP header
     packet += 14;
 
     switch (ethernet_type){
@@ -75,12 +85,20 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
 
         if (ip_header->ip_p == IPPROTO_TCP) {
             capturedPacket.protocol.append("tcp");
-            struct tcphdr* tcp_header = (struct tcphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
+
+            //Multiply by 4 to convert it to bytes (length in 32bit words)
+            struct tcphdr* tcp_header = (struct tcphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4);
+
+            //Set the source and destination ports 
             capturedPacket.srcPort = ntohs(tcp_header->th_sport);
             capturedPacket.dstPort = ntohs(tcp_header->th_dport);
         } else if (ip_header->ip_p == IPPROTO_UDP) {
             capturedPacket.protocol.append("udp");
-            struct udphdr *udp_header = (struct udphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); //Multiply by 4 to convert it to bytes (length in 32bit words)
+
+            //Multiply by 4 to convert it to bytes (length in 32bit words)
+            struct udphdr *udp_header = (struct udphdr *) ((unsigned char*)ip_header + ip_header->ip_hl * 4); 
+
+            //Set the source and destination ports
             capturedPacket.srcPort = ntohs(udp_header->uh_sport);
             capturedPacket.dstPort = ntohs(udp_header->uh_dport);
         } else if(ip_header->ip_p == IPPROTO_ICMP) {
@@ -102,7 +120,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         capturedPacket.srcIP = src_ipv6;
         capturedPacket.dstIP = dst_ipv6;
 
-        struct ip* ip_header = (struct ip*) packet;
+        //IPv6 header length is always 40 bytes
         int ipv6_header_length = 40;
 
         uint8_t next_header = ipv6_header->ip6_ctlun.ip6_un1.ip6_un1_nxt;
@@ -140,19 +158,22 @@ void packetSniffer::listInterfaces(){
 
     std::cout << "List of available network interfaces:" << std::endl;
 
+
     pcap_if_t *dev = networkDevices;
-    int int_count = 1;
+    int interfaceNumber = 1;
+
     //Iterate through devices and print description if exists
     while(dev){
         if(dev->description){
-            std::cout << int_count << ". interface: " << dev->name << ", Description: " << dev->description << std::endl;
+            std::cout << interfaceNumber << ". interface: " << dev->name << ", Description: " << dev->description << std::endl;
         } else {
-            std::cout << int_count << ". interface: " << dev->name << ", No description available" << std::endl;
+            std::cout << interfaceNumber << ". interface: " << dev->name << ", No description available" << std::endl;
         }
-        int_count++;
+        interfaceNumber++;
         dev = dev->next;
     }
 
+    //Free the allocated memory
     pcap_freealldevs(networkDevices);
 
 }

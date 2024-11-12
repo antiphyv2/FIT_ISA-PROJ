@@ -12,7 +12,7 @@ std::atomic<bool> snifferFlag(true);
 std::unique_ptr<packetSniffer> sniffer = std::make_unique<packetSniffer>();
 
 
-//graceful exit function
+//Graceful exit function
 void gracefulExit(int signal){
     snifferFlag.store(false);
     if(sniffer){
@@ -22,9 +22,11 @@ void gracefulExit(int signal){
 }
 
 int main(int argc, char** argv){
+
+    //Set signal handler
     signal(SIGINT, gracefulExit);  
 
-    //parse arguments
+    //Parse arguments
     try{
         sniffer->getParser()->parseArgs(argc, argv);
     } catch (const argParserException &e){
@@ -32,32 +34,48 @@ int main(int argc, char** argv){
             std::cerr << e.what() << std::endl;
             return EXIT_FAILURE;
         } else {
+            //Help message or interface list was printed
             return EXIT_SUCCESS;
         }
     }
     
+    //Create connection manager to store connections
     connectionManager manager;
+
+    //Create packet display
     std::unique_ptr<packetDisplay> display = std::make_unique<packetDisplay>();
     
+    //Create promise and future for sniffer thread to get the result
     std::promise<int> snifferPromise;
-    std::future<int> snifferFuture = snifferPromise.get_future(); //create promise and future for sniffer thread to get the result
-    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager); //create separate thread for sniffer
+    std::future<int> snifferFuture = snifferPromise.get_future(); 
 
-    
+    //Create separate thread for sniffer to sniff the packets
+    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager); 
+
+    //Obtain parameters from the parser
     sortBy currentSortType = sniffer->getParser()->getSortType();
     uint16_t refreshInterval = sniffer->getParser()->getRefreshInterval();
 
-    //main loop for displaying the data
+    //Main loop for displaying the data
     while(snifferFlag){
-        manager.parseConnecionVector(currentSortType); //copy map of connections to vector and sort it
-        display->windowRefresh(manager.getConnectionVector()); //refresh the window with updated data
+
+        //Copy map of the connections to vector and sort it based on the current sort type
+        manager.parseConnecionVector(currentSortType);
+
+        //Refresh the window with updated data
+        display->windowRefresh(manager.getConnectionVector()); 
+
+        //Clear the connection vector
         manager.clearConnectionVector();
-        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval)); //sleep for 
+
+        //Sleep for the refresh interval
+        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval));
     }
 
-    //wait for the sniffer thread to finish
+    //Wait for the sniffer thread to finish
     snifferThread.join();
 
+    //Based on the result of the sniffer thread return the result
     int result = snifferFuture.get();
     if(result == EXIT_FAILURE){
         return result;

@@ -15,13 +15,16 @@ void cliParser::parseArgs(int argc, char** argv){
                 this->interface = optarg;
                 break;
             case 'h':
+                //Print help message
                 this->printHelp();
                 throw argParserException(PRINT, "");
             case 's':
+                //Check if the argument is correct
                 if(strlen(optarg) != 1 || (optarg[0] != 'b' && optarg[0] != 'p')){
                     throw argParserException(ERROR, "ERR: -s parameter can only have b|p argument, see -h for usage.");
                 }
 
+                //Argumente is set twice
                 if(this->sortType == BYTE || this->sortType == PACKET){
                     throw argParserException(ERROR, "ERR: You can sort only by 1 parameter at once.");
                 }
@@ -33,6 +36,7 @@ void cliParser::parseArgs(int argc, char** argv){
                 }
                 break;
             case 'l':
+                //List all interfaces
                 packetSniffer::listInterfaces();
                 throw argParserException(LIST_INTERFACE, "");
             case 't':
