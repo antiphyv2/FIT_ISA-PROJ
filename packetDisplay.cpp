@@ -1,3 +1,9 @@
+/**
+ * @file packetDisplay.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Implementation of the packet display class and its functions
+ */
+
 #include "packetDisplay.hpp"
 
 packetDisplay::packetDisplay(){

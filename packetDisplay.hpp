@@ -1,3 +1,9 @@
+/**
+ * @file packetDisplay.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file defining the packet display class and its functions
+ */
+
 #ifndef PACKET_DISPLAY_HPP
 #define PACKET_DISPLAY_HPP
 

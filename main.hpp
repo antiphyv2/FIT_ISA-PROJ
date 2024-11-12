@@ -1,3 +1,9 @@
+/**
+ * @file main.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file for the main program file
+ */
+
 #ifndef MAIN_HPP
 #define MAIN_HPP
 
@@ -22,7 +28,6 @@
 
 //Atomic flag to be able to close the sniffer
 extern std::atomic<bool> snifferFlag;
-
 
 /**
  * @brief Function called upon pressing CTRL+C which closes the sniffer

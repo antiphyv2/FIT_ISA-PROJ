@@ -1,3 +1,9 @@
+/**
+ * @file cliparser.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file defining functions for parsing command line arguments
+ */
+
 #ifndef CLIPARSER_HPP
 #define CLIPARSER_HPP
 

@@ -1,3 +1,9 @@
+/**
+ * @file main.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Main program file for the ISA project
+ */
+
 #include "main.hpp"
 #include "cliparser.hpp"
 #include "packetSniffer.hpp"

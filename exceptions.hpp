@@ -1,3 +1,9 @@
+/**
+ * @file exceptions.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file defining custom exceptions and return codes
+ */
+
 #ifndef EXCEPTIONS_HPP
 #define EXCEPTIONS_HPP
 #include "main.hpp"

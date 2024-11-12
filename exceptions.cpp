@@ -1,3 +1,9 @@
+/**
+ * @file exceptions.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Implementation of the custom exceptions
+ */
+
 #include "exceptions.hpp"
 
 argParserException::argParserException(int retCode, const std::string& message) : retCode(retCode), message(message) {};

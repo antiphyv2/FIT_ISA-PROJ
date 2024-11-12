@@ -1,3 +1,9 @@
+/**
+ * @file packetSniffer.hpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Header file defining the packet sniffer class and its functions
+ */
+
 #ifndef PACKET_SNIFFER_HPP
 #define PACKET_SNIFFER_HPP
 

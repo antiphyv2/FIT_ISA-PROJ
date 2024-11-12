@@ -1,3 +1,9 @@
+/**
+ * @file packetSniffer.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Implementation of the packet sniffer class and its functions
+ */
+
 #include "packetSniffer.hpp"
 #include "exceptions.hpp"
 

@@ -1,3 +1,9 @@
+/**
+ * @file cliparser.cpp
+ * @author Samuel Hejnicek (xhejni00)
+ * @brief Implementation of the functions for parsing command line arguments
+ */
+
 #include "cliparser.hpp"
 #include "main.hpp"
 #include "exceptions.hpp"
