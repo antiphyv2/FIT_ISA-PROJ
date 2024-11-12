@@ -1,0 +1,37 @@
+.TH ISA-TOP 1
+.SH NAME
+isa-top \- show transfer speeds for currently communicating connections
+.SH SYNOPSIS
+.B isa-top
+\fB\-i\fR \fIinterface\fR
+[\fB\-s\fR \fIb\fR|\fIp\fR]
+[\fB\-h\fR]
+[\fB\-l\fR]
+.IR
+.SH DESCRIPTION
+.B isa-top
+shows transfer speeds in human-readable format for individual communicating ip addresses.
+Program uses libcap library to capture packets from network interface.
+The connections are stored in the map including information about the number of bytes transferred in the last interval.
+Connections are displayed using ncurses library and updated in a given refresh interval. Program will not display more than 10 active connections at a time.
+.SH OPTIONS
+.TP
+\fB\-i\fR \fIinterface\fR
+Specify the network interface on which the packets will be captured. This option is mandatory. Examples of interfaces could be \fBeth0\fR, \fBwlan0\fR.
+If you are not sure about the available interfaces, you can use [\fB\-h\fR] option to list them.
+.TP
+[\fB\-s\fR \fIb\fR|\fIp\fR]
+Specify parameter based on which the connections will be sorted. When option not specified, the connections are sorted by the number of bytes transferred in the last interval.
+
+\fIb\fR - sort by the number of bytes transferred in the last interval.
+
+\fIp\fR - sort by the number of packets transferred in the last interval.
+.TP
+[\fB\-h\fR]
+Shows usage message of the program.
+.TP
+[\fB\-l\fR]
+List all available network interfaces.
+
+.SH AUTHOR
+Samuel Hejnicek, <xhejni00@stud.fit.vut.cz>
