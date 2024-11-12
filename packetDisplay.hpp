@@ -42,6 +42,12 @@ public:
     void windowRefresh(std::vector<connectionInfo>& connectionVector);
 
     /**
+     * @brief Clears the screen
+     * 
+     */
+    void clearScreen();
+
+    /**
      * @brief Creates the main window and all subwindows
      * 
      */

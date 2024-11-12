@@ -58,6 +58,11 @@ packetDisplay::~packetDisplay(){
     endwin();
 }
 
+void packetDisplay::clearScreen(){
+    clear();
+    refresh();
+}
+
 void packetDisplay::printTextCenter(WINDOW* win, int rowPos, const char* text, textType type){
 
     //Obtain the width of the window
@@ -158,26 +163,26 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
  std::string packetDisplay::transformBytes(long double bytes){
 
     std::string speed;
+    long double maxBytes = 1024;
+    long double maxKiloBytes = 1024 * 1024;
+    long double maxMegaBytes = 1024 * 1024 * 1024;
 
-    if(bytes >= 1024){
-        bytes /= 1024;
-        if(bytes >= 1024){
-            bytes /= 1024;
-            if(bytes >= 1024){
-                bytes /= 1024;
-                bytes = std::round(bytes * 10.0) / 10.0;
-                speed = "GBps";
-            } else {
-                bytes = std::round(bytes * 10.0) / 10.0;
-                speed = "MBps";
-            }
-        } else {
-            bytes = std::round(bytes * 10.0) / 10.0;
-            speed = "KBps";
-        }
-    } else {
-        bytes = std::round(bytes * 10.0) / 10.0;
+    //Transform bytes to corret unit
+    if(bytes < maxBytes){
         speed = "Bps";
+        bytes = std::round(bytes * 10.0) / 10.0;
+    } else if(bytes < maxKiloBytes){
+        bytes /= maxBytes;
+        bytes = std::round(bytes * 10.0) / 10.0;
+        speed = "KBps";
+    } else if(bytes < maxMegaBytes){
+        bytes /= maxKiloBytes; 
+        bytes = std::round(bytes * 10.0) / 10.0;
+        speed = "MBps";
+    } else {
+        bytes /= maxMegaBytes;
+        bytes = std::round(bytes * 10.0) / 10.0;
+        speed = "GBps";
     }
 
     //Create output stream to format the bytes

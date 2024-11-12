@@ -31,11 +31,14 @@ public:
      */
     pcap_t* getSniffer();
 
-        /**
+    /**
      * @brief Runs the sniffer
      * 
+     * @param promise Promise to set the value of the sniffer
+     * @param manager Pointer to the connection manager
+     * @param display Reference to the packet display
      */
-    void runSniffer(std::promise<int> promise, connectionManager* manager);
+    void runSniffer(std::promise<int> promise, connectionManager* manager, std::unique_ptr<packetDisplay>& display);
 
     /**
      * @brief Sniffs the packets

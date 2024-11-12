@@ -50,11 +50,14 @@ int main(int argc, char** argv){
     std::future<int> snifferFuture = snifferPromise.get_future(); 
 
     //Create separate thread for sniffer to sniff the packets
-    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager); 
+    std::thread snifferThread(&packetSniffer::runSniffer, sniffer.get(), std::move(snifferPromise), &manager, std::ref(display)); 
 
     //Obtain parameters from the parser
     sortBy currentSortType = sniffer->getParser()->getSortType();
     uint16_t refreshInterval = sniffer->getParser()->getRefreshInterval();
+
+    //Reference time for the refresh interval
+    auto referenceTime = std::chrono::system_clock::now();
 
     //Main loop for displaying the data
     while(snifferFlag){
@@ -68,8 +71,11 @@ int main(int argc, char** argv){
         //Clear the connection vector
         manager.clearConnectionVector();
 
-        //Sleep for the refresh interval
-        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval));
+        //Add refresh interval to the reference time
+        referenceTime += std::chrono::seconds(refreshInterval);
+
+        //Sleep until updated reference time
+        std::this_thread::sleep_until(referenceTime);
     }
 
     //Wait for the sniffer thread to finish

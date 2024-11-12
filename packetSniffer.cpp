@@ -15,14 +15,16 @@ pcap_t* packetSniffer::getSniffer(){
     return this->sniffer;
 }
 
-void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager){
+void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* manager, std::unique_ptr<packetDisplay>& display){
     int exit_value = EXIT_SUCCESS;
 
     //Sniff the packets and catch errors as exceptions
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
+        display->clearScreen();
         std::cerr << e.what() << std::endl;
+
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
         }
