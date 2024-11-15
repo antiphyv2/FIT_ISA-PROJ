@@ -145,9 +145,27 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
             break;
         }
 
-        //Obtain all information from the connection
-        std::string sourceIpPort = connectionVector[i].srcIP + ":" + std::to_string(connectionVector[i].srcPort);
-        std::string destIpPort = connectionVector[i].dstIP + ":" + std::to_string(connectionVector[i].dstPort);
+        
+        std::string sourceIpPort;
+        std::string destIpPort;
+
+        //If src port is 0, print onl IP address
+        std::string sourcePort = std::to_string(connectionVector[i].srcPort);
+        if(sourcePort == "0"){
+           sourceIpPort = connectionVector[i].srcIP;
+        } else {
+            sourceIpPort = connectionVector[i].srcIP + ":" + std::to_string(connectionVector[i].srcPort);
+        }
+
+        //If dst port is 0, print only IP address
+        std::string destPort = std::to_string(connectionVector[i].dstPort);
+        if(destPort == "0"){
+            destIpPort = connectionVector[i].dstIP;
+        } else {
+            destIpPort = connectionVector[i].dstIP + ":" + std::to_string(connectionVector[i].dstPort);
+        }
+
+        //Obtain rest information from the connection
         std::string protocol = connectionVector[i].protocol;
         std::string rxPackets = std::to_string(connectionVector[i].packetsRx);
         std::string txPackets = std::to_string(connectionVector[i].packetsTx);

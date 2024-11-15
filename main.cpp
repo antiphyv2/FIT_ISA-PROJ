@@ -81,7 +81,8 @@ int main(int argc, char** argv){
         referenceTime += std::chrono::seconds(refreshInterval);
 
         //Sleep until updated reference time
-        std::this_thread::sleep_until(referenceTime);
+        //std::this_thread::sleep_until(referenceTime);
+        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval));
     }
 
     //Wait for the sniffer thread to finish

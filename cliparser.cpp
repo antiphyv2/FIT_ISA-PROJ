@@ -15,6 +15,7 @@ void cliParser::printHelp(){
 
 void cliParser::parseArgs(int argc, char** argv){
     int option;
+    int interval = 1;
     while((option = getopt(argc, argv, "i:s:t:hl")) != -1){
         switch(option){
             case 'i':
@@ -47,10 +48,11 @@ void cliParser::parseArgs(int argc, char** argv){
                 throw argParserException(LIST_INTERFACE, "");
             case 't':
                 char* pointer;
-                this->refreshInterval = (int) strtol(optarg, &pointer, 10);
-                if(*pointer != 0){
-                    throw argParserException(ERROR, "ERR: Time interval must be a number.");
+                interval = (int) strtol(optarg, &pointer, 10);
+                if(*pointer != 0 || interval <= 0){
+                    throw argParserException(ERROR, "ERR: Time interval must be positive a number.");
                 }
+                this->refreshInterval = interval;
                 break;
             default:
                 throw argParserException(DEFAULT, "Try ./isa-top -h for help.");
