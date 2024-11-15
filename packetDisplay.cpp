@@ -69,6 +69,10 @@ void packetDisplay::clearScreen(){
     refresh();
 }
 
+void packetDisplay::setRefreshInterval(int interval){
+    this->refreshInterval = interval;
+}
+
 void packetDisplay::printTextCenter(WINDOW* win, int rowPos, const char* text, textType type){
 
     //Obtain the width of the window
@@ -165,12 +169,24 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
             destIpPort = connectionVector[i].dstIP + ":" + std::to_string(connectionVector[i].dstPort);
         }
 
-        //Obtain rest information from the connection
+        //Obtain protocol information
         std::string protocol = connectionVector[i].protocol;
-        std::string rxPackets = std::to_string(connectionVector[i].packetsRx);
-        std::string txPackets = std::to_string(connectionVector[i].packetsTx);
-        std::string rxBytes = transformBytes(connectionVector[i].totalDataRx);
-        std::string txBytes = transformBytes(connectionVector[i].totalDataTx);
+
+        //Transform packets received/transmitted to string with correct rounding
+        std::ostringstream helpStream;
+        helpStream << std::fixed << std::setprecision(1) << (connectionVector[i].packetsRx / (double) this->refreshInterval);
+        std::string rxPackets = helpStream.str();
+        helpStream.str("");
+        helpStream.clear();
+
+        helpStream << std::fixed << std::setprecision(1) << (connectionVector[i].packetsTx / (double) this->refreshInterval);
+        std::string txPackets = helpStream.str();
+        helpStream.str("");
+        helpStream.clear();
+
+        //Transform bytes received/transmitted to string with correct rounding        
+        std::string rxBytes = transformBytes(connectionVector[i].totalDataRx / (double) this->refreshInterval);
+        std::string txBytes = transformBytes(connectionVector[i].totalDataTx / (double) this->refreshInterval);
 
         //Print all the information in the center of the specfic subwindow
         printTextCenter(this->srcIpPort, i+4, sourceIpPort.c_str(), CLASSIC);

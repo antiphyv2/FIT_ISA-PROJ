@@ -41,7 +41,7 @@ void connectionManager::addConnection(connectionInfo packet, int packetLength){
     }
 
     //If the connection is not in the map, add it as a forward connection and fill the information about transmitted data
-    packet.packetsTx = 1;
+    packet.packetsTx = 1.0;
     packet.totalDataTx = packetLength;
     this->connectionMap[forwardConnection] = packet;
 }

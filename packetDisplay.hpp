@@ -28,6 +28,7 @@ enum textType {
 
 class packetDisplay {
 private:
+    int refreshInterval;
     int mainWinHeight;
     int mainWinWidth;
     WINDOW* srcIpPort;
@@ -96,6 +97,13 @@ public:
      * @return std::string readable format of bytes to be displayed
      */
     std::string transformBytes(long double bytes);
+
+    /**
+     * @brief Set refresh interval for the display update
+     * 
+     * @param interval interval in seconds
+     */
+    void setRefreshInterval(int interval);
 };
 
 #endif

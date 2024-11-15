@@ -62,6 +62,9 @@ int main(int argc, char** argv){
     sortBy currentSortType = sniffer->getParser()->getSortType();
     uint16_t refreshInterval = sniffer->getParser()->getRefreshInterval();
 
+    //Set the refresh interval for the display
+    display->setRefreshInterval(refreshInterval);
+
     //Reference time for the refresh interval
     auto referenceTime = std::chrono::system_clock::now();
 

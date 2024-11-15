@@ -26,8 +26,8 @@ struct connectionInfo{
     uint16_t srcPort;
     uint16_t dstPort;
     std::string protocol;
-    ulong packetsTx;
-    ulong packetsRx;
+    long double packetsTx;
+    long double packetsRx;
     long double totalDataTx;
     long double totalDataRx;
 };
