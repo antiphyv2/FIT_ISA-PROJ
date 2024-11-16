@@ -129,7 +129,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         capturedPacket.srcIP += src_ipv6;
         capturedPacket.srcIP += "]";
         capturedPacket.dstIP += "[";
-        capturedPacket.dstIP = dst_ipv6;
+        capturedPacket.dstIP += dst_ipv6;
         capturedPacket.dstIP += "]";
 
         //IPv6 header length is always 40 bytes
