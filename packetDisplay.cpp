@@ -209,20 +209,20 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
 
     //Transform bytes to corret unit
     if(bytes < maxBytes){
-        speed = "Bps";
+        speed = "B";
         bytes = std::round(bytes * 10.0) / 10.0;
     } else if(bytes < maxKiloBytes){
         bytes /= maxBytes;
         bytes = std::round(bytes * 10.0) / 10.0;
-        speed = "KBps";
+        speed = "K";
     } else if(bytes < maxMegaBytes){
         bytes /= maxKiloBytes; 
         bytes = std::round(bytes * 10.0) / 10.0;
-        speed = "MBps";
+        speed = "M";
     } else {
         bytes /= maxMegaBytes;
         bytes = std::round(bytes * 10.0) / 10.0;
-        speed = "GBps";
+        speed = "G";
     }
 
     //Create output stream to format the bytes
