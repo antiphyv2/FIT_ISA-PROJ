@@ -65,9 +65,6 @@ int main(int argc, char** argv){
     //Set the refresh interval for the display
     display->setRefreshInterval(refreshInterval);
 
-    //Reference time for the refresh interval
-    auto referenceTime = std::chrono::system_clock::now();
-
     //Main loop for displaying the data
     while(snifferFlag){
 
@@ -80,11 +77,7 @@ int main(int argc, char** argv){
         //Clear the connection vector
         manager.clearConnectionVector();
 
-        //Add refresh interval to the reference time
-        referenceTime += std::chrono::seconds(refreshInterval);
-
-        //Sleep until updated reference time
-        //std::this_thread::sleep_until(referenceTime);
+        //Sleep for the refresh interval
         std::this_thread::sleep_for(std::chrono::seconds(refreshInterval));
     }
 
