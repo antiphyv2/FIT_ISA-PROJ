@@ -77,10 +77,10 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
     //Get packet length
     int packetLength = pkthdr->len;
 
-    //Find out if type is IPv4, IPv6
+    //Find out if type is IPv4 or IPv6
     uint16_t ethernet_type = ntohs(((struct ether_header*) packet)->ether_type);
 
-    //Now we can skip the datalink ethernet header and get to the IP header
+    //Now we can skip the ethernet header and get to the IP header
     packet += 14;
 
     switch (ethernet_type){
@@ -121,7 +121,7 @@ void packetSniffer::packetParser(u_char* user, const struct pcap_pkthdr* pkthdr,
         char src_ipv6[INET6_ADDRSTRLEN];
         char dst_ipv6[INET6_ADDRSTRLEN];
 
-        //Use inet_ntop since inet_ntoa is only used for ipv4 addresses, it should also be fine with RFC 5952 when reading this site: https://pubs.opengroup.org/onlinepubs/009604499/functions/inet_ntop.html
+        //Use inet_ntop since inet_ntoa is only used for IPv4 addresses, it should also be fine with RFC 5952 when reading this site: https://pubs.opengroup.org/onlinepubs/009604499/functions/inet_ntop.html
         inet_ntop(AF_INET6, &ipv6_header->ip6_src, src_ipv6, INET6_ADDRSTRLEN);
         inet_ntop(AF_INET6, &ipv6_header->ip6_dst, dst_ipv6, INET6_ADDRSTRLEN);
 
