@@ -173,20 +173,13 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
         std::string protocol = connectionVector[i].protocol;
 
         //Transform packets received/transmitted to string with correct rounding
-        std::ostringstream helpStream;
-        helpStream << std::fixed << std::setprecision(1) << (connectionVector[i].packetsRx / (double) this->refreshInterval);
-        std::string rxPackets = helpStream.str();
-        helpStream.str("");
-        helpStream.clear();
+        std::string rxPackets = transformDataToUnit(connectionVector[i].packetsRx / (double) this->refreshInterval);
+        std::string txPackets = transformDataToUnit(connectionVector[i].packetsTx / (double) this->refreshInterval);
 
-        helpStream << std::fixed << std::setprecision(1) << (connectionVector[i].packetsTx / (double) this->refreshInterval);
-        std::string txPackets = helpStream.str();
-        helpStream.str("");
-        helpStream.clear();
 
         //Transform bytes received/transmitted to string with correct rounding        
-        std::string rxBytes = transformBytes(connectionVector[i].totalDataRx / (double) this->refreshInterval);
-        std::string txBytes = transformBytes(connectionVector[i].totalDataTx / (double) this->refreshInterval);
+        std::string rxBytes = transformDataToUnit(connectionVector[i].totalDataRx / (double) this->refreshInterval);
+        std::string txBytes = transformDataToUnit(connectionVector[i].totalDataTx / (double) this->refreshInterval);
 
         //Print all the information in the center of the specfic subwindow
         printTextCenter(this->srcIpPort, i+4, sourceIpPort.c_str(), CLASSIC);
@@ -200,34 +193,34 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
 
 }
 
- std::string packetDisplay::transformBytes(long double bytes){
+ std::string packetDisplay::transformDataToUnit(long double data){
 
     std::string speed;
-    long double maxBytes = 1024;
-    long double maxKiloBytes = 1024 * 1024;
-    long double maxMegaBytes = 1024 * 1024 * 1024;
+    long double maxBasic = 1024;
+    long double maxKilo = 1024 * 1024;
+    long double maxMega = 1024 * 1024 * 1024;
 
     //Transform bytes to corret unit
-    if(bytes < maxBytes){
-        speed = "B";
-        bytes = std::round(bytes * 10.0) / 10.0;
-    } else if(bytes < maxKiloBytes){
-        bytes /= maxBytes;
-        bytes = std::round(bytes * 10.0) / 10.0;
+    if(data < maxBasic){
+        speed = "";
+        data = std::round(data * 10.0) / 10.0;
+    } else if(data < maxKilo){
+        data /= maxBasic;
+        data = std::round(data * 10.0) / 10.0;
         speed = "K";
-    } else if(bytes < maxMegaBytes){
-        bytes /= maxKiloBytes; 
-        bytes = std::round(bytes * 10.0) / 10.0;
+    } else if(data < maxMega){
+        data /= maxKilo; 
+        data = std::round(data * 10.0) / 10.0;
         speed = "M";
     } else {
-        bytes /= maxMegaBytes;
-        bytes = std::round(bytes * 10.0) / 10.0;
+        data /= maxMega;
+        data = std::round(data * 10.0) / 10.0;
         speed = "G";
     }
 
     //Create output stream to format the bytes
     std::ostringstream out;
-    out << std::fixed << std::setprecision(1) << bytes;
+    out << std::fixed << std::setprecision(1) << data;
 
     //Return the formatted bytes and speed unit
     return out.str() + speed;

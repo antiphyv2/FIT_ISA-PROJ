@@ -91,12 +91,12 @@ public:
     void printVectorConnections(std::vector<connectionInfo>& connectionVector);
 
     /**
-     * @brief Transforms number of bytes to human readable format with speed unit
+     * @brief Transforms number of bytes or packets to human readable format with speed unit
      * 
-     * @param bytes number of bytes
-     * @return std::string readable format of bytes to be displayed
+     * @param data bytes or packets to be transformed
+     * @return std::string readable format of data (bytes or packets) to be displayed
      */
-    std::string transformBytes(long double bytes);
+    std::string transformDataToUnit(long double data);
 
     /**
      * @brief Set refresh interval for the display update
