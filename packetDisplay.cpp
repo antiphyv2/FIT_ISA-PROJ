@@ -65,7 +65,11 @@ packetDisplay::~packetDisplay(){
 }
 
 void packetDisplay::printErrorMsg(const char* errorMsg){
-    clear();
+    wclear(this->srcIpPort);
+    wclear(this->dstIpPort);
+    wclear(this->proto);
+    wclear(this->rx);
+    wclear(this->tx);
     printw(errorMsg, this->mainWinHeight/2, this->mainWinWidth/2);
     refresh();
 }
