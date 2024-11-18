@@ -60,6 +60,7 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
     }
 
+    //Check if the interface supports Ethernet
     int linkLayerType = pcap_datalink(sniffer);
     if(linkLayerType != DLT_EN10MB){
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_DATALINK] Only interfaces supporting Ethernet are allowed");
