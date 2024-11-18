@@ -64,8 +64,9 @@ packetDisplay::~packetDisplay(){
     endwin();
 }
 
-void packetDisplay::clearScreen(){
+void packetDisplay::printErrorMsg(const char* errorMsg){
     clear();
+    printw(errorMsg, this->mainWinHeight/2, this->mainWinWidth/2);
     refresh();
 }
 

@@ -28,9 +28,7 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
     try {
         this->sniffThePackets(manager);
     } catch (const packetSnifferException& e){
-        display->clearScreen();
-        std::cerr << e.what() << std::endl;
-
+        display->printErrorMsg(e.what());
         if(e.getRetCode() != SNIFFER_OK){
             exit_value = EXIT_FAILURE;
         }

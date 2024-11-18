@@ -48,11 +48,13 @@ public:
      */
     void windowRefresh(std::vector<connectionInfo>& connectionVector);
 
+
     /**
-     * @brief Clears the screen
+     * @brief Prints error message in the screen
      * 
+     * @param msg error message to be printed
      */
-    void clearScreen();
+    void printErrorMsg(const char* msg);
 
     /**
      * @brief Creates the main window and all subwindows
