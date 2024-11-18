@@ -41,8 +41,11 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
     promise.set_value(exit_value);
 }
 
-//All functions needed to create the sniffer are taken from my IPK2 projecct and are based on an example from
-//https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer
+/**
+ * Functions to create the sniffer (sniffThePackets) and parse the information from packets (packetParser) are taken and slightly changed from my IPK2 project sniffer implementation.
+ * Functions in my sniffer implementation were based on an example from this site:
+ * https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer (author: Vic Hargrave)
+ */
 
 void packetSniffer::sniffThePackets(connectionManager* manager){
 
@@ -55,6 +58,11 @@ void packetSniffer::sniffThePackets(connectionManager* manager){
     if(!sniffer){
         snifferFlag.store(false);
         throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_OPEN_LIVE] Interface named " + std::string(errbuf));
+    }
+
+    int linkLayerType = pcap_datalink(sniffer);
+    if(linkLayerType != DLT_EN10MB){
+        throw packetSnifferException(SNIFFER_ERROR, "ERROR: [PCAP_DATALINK] Only interfaces supporting Ethernet are allowed");
     }
 
     //Parse the packets in a loop
