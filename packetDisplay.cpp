@@ -196,9 +196,9 @@ void packetDisplay::printVectorConnections(std::vector<connectionInfo>& connecti
  std::string packetDisplay::transformDataToUnit(long double data){
 
     std::string speed;
-    long double maxBasic = 1024;
-    long double maxKilo = 1024 * 1024;
-    long double maxMega = 1024 * 1024 * 1024;
+    long double maxBasic = 1000;
+    long double maxKilo = 1000 * 1000;
+    long double maxMega = 1000 * 1000 * 1000;
 
     //Transform bytes to corret unit
     if(data < maxBasic){
