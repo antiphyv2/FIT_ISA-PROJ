@@ -78,7 +78,14 @@ int main(int argc, char** argv){
         manager.clearConnectionVector();
 
         //Sleep for the refresh interval
-        std::this_thread::sleep_for(std::chrono::seconds(refreshInterval));
+        for(int i = 0; i < refreshInterval; i++){
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+            if(!snifferFlag){
+                break;
+            }
+        }
+        
+        
     }
 
     //Wait for the sniffer thread to finish
