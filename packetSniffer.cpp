@@ -42,7 +42,7 @@ void packetSniffer::runSniffer(std::promise<int> promise, connectionManager* man
 }
 
 /**
- * Functions to create the sniffer (sniffThePackets) and parse the information from packets (packetParser) are taken and slightly changed from my IPK2 project sniffer implementation.
+ * Functions to create the sniffer (sniffThePackets) and parse the information from packets (packetParser) are taken (and modified) from my IPK2 project sniffer implementation.
  * Functions in my sniffer implementation were based on an example from this site:
  * https://vichargrave.github.io/programming/develop-a-packet-sniffer-with-libpcap/#build-and-run-the-sniffer (author: Vic Hargrave)
  */
